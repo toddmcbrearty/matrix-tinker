@@ -1,0 +1,15 @@
+<polymer-element name="transition-scale" extends="core-transition">
+    <script>
+        Polymer(
+        {
+            go: function(node, styles)
+            {
+                for (var key in styles)
+                {
+                    node.style[key] = styles[key]
+                }
+            }
+        })
+    </script>
+</polymer-element>
+<transition-scale id="transition-scale"></transition-scale>

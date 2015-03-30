@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+        <script src="elements/webcomponentsjs/webcomponents.js"></script>
+        <link rel="import" href="elements/polymer/polymer.html">
+        <link rel="import" href="elements/matrix-dependencies.html">
+        <link rel="stylesheet" href="style/app.css"> </head>
+
+    <body unresolved>
+        <matrix-drawer id="system-menu" right></matrix-drawer>
+        <template is="auto-binding">
+            <div horizontal layout wrap>
+                <template repeat="{{item in activeCollection}}">
+                    <matrix-card id="card{{item.value}}" data="{{item}}"></matrix-card>
+                </template>
+            </div>
+        </template>
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/app.js"></script>
+    </body>
+
+</html>

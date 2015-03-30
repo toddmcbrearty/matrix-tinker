@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    @@scripts-high
+    @@polymer-imports
+    @@stylesheet-main
+</head>
+<body unresolved>
+<matrix-drawer id="system-menu" right></matrix-drawer>
+<template is="auto-binding">
+    <div horizontal layout wrap>
+        <template repeat="{{item in activeCollection}}">
+            <matrix-card id="card{{item.value}}" data="{{item}}"></matrix-card>
+        </template>
+    </div>
+</template>
+@@scripts-low
+</body>
+</html>

@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  position: relative;
+  margin-top: 40px;
+  margin-left: 40px;
+  padding: 20px;
+  width: 200px;
+  height: 200px;
+  z-index: 1; }
+
+h2 {
+  font-size: 3rem;
+  font-weight: 700; }
+
+paper-ripple {
+  padding-top: inherit;
+  height: 100%;
+  width: 100%;
+  transition: all 1s ease-out; }
+
+paper-shadow {
+  background: white;
+  transition: all 1s ease-out; }
+
+.card-header core-icon {
+  margin-top: 15px;
+  margin-left: 15px;
+  height: 32px;
+  width: 32px;
+  color: #999; }

@@ -1,0 +1,19 @@
+<link rel="import" href="../../../vendor/bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../../../vendor/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../vendor/bower_components/core-icons/core-icons.html">
+<polymer-element name="matrix-card" constructor="MatrixCard" attributes="data" on-click="{{handleClick}}">
+    <template relative>
+        <link href="matrix-card.css" rel="stylesheet" shim-shadowdom>
+        <paper-shadow fit z="1" animated="true">
+            <div class="card-header" layout horizontal center>
+                <core-icon icon="{{data.icon}}"></core-icon>
+            </div>
+            <content horizontal center center-justified layout>
+                <div horizontal center center-justified layout fit>
+                    <h2>{{data.value}}</h2> </div>
+            </content>
+            <paper-ripple fit class="recenteringTouch"></paper-ripple>
+        </paper-shadow>
+    </template>
+    <script src="matrix-card.js"></script>
+</polymer-element>

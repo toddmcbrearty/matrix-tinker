@@ -1,0 +1,30 @@
+{
+  "name": "matrix",
+  "version": "0.0.1",
+  "description": "A simple game to test and practice information recall and pattern recognition",
+  "keywords": "",
+  "license": "MIT",
+  "author": "randy wick",
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-git": "^1.1.0",
+    "gulp-replace-task": "^0.1.0",
+    "browser-sync": "^2.3.1",
+    "del": "^1.1.1",
+    "run-sequence": "^1.0.2",
+    "node-notifier": "^4.1.2",
+    "coffee-script": "^1.9.1",
+    "gulp-coffee": "^2.3.1",
+    "vinyl-fs": "^1.0.0",
+    "gulp-concat": "^2.5.2",
+    "vulcanize": "^0.7.10",
+    "gulp-vulcanize": "^5.0.0",
+    "gulp-if": "^1.2.5",
+    "gulp-util": "^3.0.4",
+    "jquery": "^2.1.3",
+    "vinyl": "*",
+    "through2": "*",
+    "fs-extra": "*",
+    "gulp-prettify": "*"
+  }
+}
