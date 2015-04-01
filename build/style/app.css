@@ -11,4 +11,4 @@ html, body {
   border-right: 1px solid #AAA; }
 
 .blurry {
-  -webkit-filter: blur(3px); }
+  -webkit-filter: blur(1px); }
