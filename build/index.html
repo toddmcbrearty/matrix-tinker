@@ -14,11 +14,23 @@
                 <matrix-drawer modal application></matrix-drawer>
                 <div flex layout horizontal wrap relative class="scroll">
                     <template repeat="{{item in activeCollection}}">
-                        <matrix-card id="card{{item.value}}" data="{{item}}"></matrix-card>
+                        <matrix-card id="card{{item.value}}" data="{{item}}">
+                            <h2>{{item.value}}</h2> </matrix-card>
                     </template>
                 </div>
                 <matrix-drawer right>
-                    <matrix-card id="properties-general" size="expanded"></matrix-card>
+                    <matrix-card id="properties-general" size="expanded" transformable="false" no-toolbar no-ripple>
+                        <matrix-list> <span class="list-title">General</span>
+                            <matrix-list-item> <span class="item-title">Document Name</span> <span>Foo bar baz fizz: what do we really know?</span> </matrix-list-item>
+                            <matrix-list-item> <span class="item-title">Author</span> <span>Foobarius Fizz, Esq.</span> </matrix-list-item>
+                            <matrix-list-item> <span class="item-title">Type</span> <span>Contract</span> </matrix-list-item>
+                            <matrix-list-item>
+                                <core-icon icon="warning"></core-icon> <span class="item-title">Effective Date</span> <span>UNKNOWN</span> </matrix-list-item>
+                            <matrix-list-item extended> <span class="item-title">Notes</span> <span>
+                        This is not a note.
+                    </span> </matrix-list-item>
+                        </matrix-list>
+                    </matrix-card>
                 </matrix-drawer>
             </matrix-scaffold>
         </template>

@@ -101,6 +101,8 @@ html /deep/ core-icon {
 
 
 
+
+
 </head><body><div hidden=""><polymer-element name="paper-shadow" assetpath="../../vendor/bower_components/paper-shadow/">
 
 <template>
@@ -1345,9 +1347,16 @@ html /deep/ core-icon {
   height: 200px;
   z-index: 1; }
 
-h2 {
-  font-size: 3rem;
-  font-weight: 700; }
+:host([no-toolbar]) .toolbar {
+  display: none !important; }
+
+:host([auto-height]) {
+  height: auto !important; }
+
+::content h2 {
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin: 0 0 0 15px; }
 
 paper-ripple {
   padding-top: inherit;
@@ -1355,11 +1364,14 @@ paper-ripple {
   width: 100%;
   transition: all 1s ease-out; }
 
+:host([no-ripple]) paper-ripple {
+  display: none !important; }
+
 paper-shadow {
   background: white;
   transition: all 1s ease-out; }
 
-.card-header core-icon {
+.toolbar core-icon {
   margin-top: 15px;
   margin-left: 15px;
   height: 32px;
@@ -1367,37 +1379,34 @@ paper-shadow {
   color: #999; }
 </style>
         <paper-shadow fit="" z="1" animated="true">
-            <div class="card-header" layout="" horizontal="" center="">
+            <div class="toolbar" layout="" horizontal="" center="">
                 <core-icon icon="{{data.icon}}"></core-icon>
             </div>
-            <div layout="" horizontal="" center="" center-justified="" fit="">
-                <h2>{{data.value}}</h2> </div>
+            <content></content>
             <paper-ripple fit="" class="recenteringTouch"></paper-ripple>
         </paper-shadow>
     </template>
-    <script>var values,
-  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-values = {};
+    <script>var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 Polymer('matrix-card', {
   ready: function() {
-    var attr, i, item, len, ref, ref1, value;
-    ref = this.attributes;
-    for (i = 0, len = ref.length; i < len; i++) {
-      attr = ref[i];
-      values[attr.nodeName] = attr.value;
+    var item, ref, ref1, results, value;
+    if ((ref = this.autoheight) === true || ref === 'true') {
+      this.base.height = 'auto';
+      this.expanded.height = 'auto';
     }
     if (this.size === 'expanded') {
       ref1 = this.expanded;
+      results = [];
       for (item in ref1) {
         value = ref1[item];
-        this.style[item] = value;
+        results.push(this.style[item] = value);
       }
+      return results;
     }
-    return this.value = values.value;
   },
   publish: {
+    autoheight: false,
     transformable: true,
     busy: false,
     size: 'base',
@@ -1893,5 +1902,106 @@ Polymer('matrix-card', {
         </div>
     </template>
     <script>Polymer('matrix-scaffold', function() {});
+</script>
+</polymer-element>
+<polymer-element name="matrix-list" assetpath="matrix-list/">
+    <template>
+        <style shim-shadowdom="">:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px; }
+
+::content .list-title {
+  font-size: 0.9em;
+  font-weight: 500;
+  display: block;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  line-height: 1;
+  overflow: hidden;
+  color: #999; }
+
+::content matrix-list-item:not(:last-child):after {
+  height: 1px;
+  background: #E5E5E5;
+  margin-left: 48px;
+  width: 100%;
+  display: block;
+  content: ""; }
+</style>
+        <div vertical="" layout="" class="matrix-list-layout">
+            <div>
+                <content select=".list-title"></content>
+            </div>
+            <content select="matrix-list-item"></content>
+        </div>
+    </template>
+    <script>Polymer('matrix-list', {
+  ready: function() {}
+});
+</script>
+</polymer-element>
+<polymer-element name="matrix-list-item" assetpath="matrix-list-item/">
+    <template>
+        <style shim-shadowdom="">:host {
+  display: block;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  color: #5C5959; }
+
+:host([extended]) {
+  height: 96px !important; }
+
+.list-item-icon {
+  height: 48px;
+  width: 48px; }
+  .list-item-icon ::content core-icon, .list-item-icon ::content img {
+    height: 24px;
+    width: 24px;
+    color: #999; }
+  .list-item-icon ::content .item-title {
+    margin-left: 0px !important; }
+
+.list-item-content {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 100%; }
+
+.list-item-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+  overflow: hidden;
+  margin-bottom: 3px; }
+
+.list-item-body {
+  font-size: 0.8rem;
+  font-weight: 400;
+  height: auto; }
+</style>
+        <div class="matrix-list-item" horizontal="" layout="">
+            <div class="list-item-icon" horizontal="" layout="" center="" center-justified="">
+                <div>
+                    <content select="core-icon, img"></content>
+                </div>
+            </div>
+            <div class="list-item-content" vertical="" layout="">
+                <div class="list-item-title">
+                    <content select=".item-title"></content>
+                </div>
+                <div flex="" class="list-item-body">
+                    <content></content>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>Polymer('matrix-list-item', {
+  ready: function() {}
+});
 </script>
 </polymer-element></div></body></html>

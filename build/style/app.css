@@ -7,8 +7,8 @@ html, body {
 .scroll {
   overflow-y: scroll;
   z-index: 10;
-  box-shadow: 5px 0px 3px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 0px 5px 0px rgba(0, 0, 0, 0.4);
   border-right: 1px solid #AAA; }
 
 .blurry {
-  -webkit-filter: blur(2px); }
+  -webkit-filter: blur(3px); }

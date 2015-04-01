@@ -1,0 +1,10 @@
+<polymer-element name="matrix-list">
+    <template>
+        <link href="matrix-list.css" rel="stylesheet" shim-shadowdom>
+        <div vertical layout class="matrix-list-layout">
+            <div><content select=".list-title"></content></div>
+            <content select="matrix-list-item"></content>
+        </div>
+    </template>
+    <script src="matrix-list.js"></script>
+</polymer-element>

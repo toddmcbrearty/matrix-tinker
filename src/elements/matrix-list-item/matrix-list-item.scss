@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  color: #5C5959;
+}
+
+:host([extended]) {
+  height: 96px!important;
+}
+
+.list-item-icon {
+  height: 48px;
+  width: 48px;
+
+  ::content core-icon, ::content img {
+    height: 24px;
+    width: 24px;
+    color: #999;
+  }
+
+  ::content .item-title {
+    margin-left: 0px!important;
+  }
+}
+
+.list-item-content {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 100%;
+}
+
+.list-item-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+  overflow: hidden;
+  margin-bottom: 3px;
+}
+
+.list-item-body {
+  font-size: 0.8rem;
+  font-weight: 400;
+  height: auto;
+}
+

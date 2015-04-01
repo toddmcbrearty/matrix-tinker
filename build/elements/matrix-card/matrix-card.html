@@ -5,11 +5,10 @@
     <template relative>
         <link href="matrix-card.css" rel="stylesheet" shim-shadowdom>
         <paper-shadow fit z="1" animated="true">
-            <div class="card-header" layout horizontal center>
+            <div class="toolbar" layout horizontal center>
                 <core-icon icon="{{data.icon}}"></core-icon>
             </div>
-            <div layout horizontal center center-justified fit>
-                <h2>{{data.value}}</h2> </div>
+            <content></content>
             <paper-ripple fit class="recenteringTouch"></paper-ripple>
         </paper-shadow>
     </template>

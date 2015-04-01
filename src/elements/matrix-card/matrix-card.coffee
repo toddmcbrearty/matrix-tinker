@@ -1,15 +1,14 @@
-values = {}
-
 Polymer 'matrix-card',
   ready: ->
-    for attr in @attributes
-      values[attr.nodeName] = attr.value
+
+    if @autoheight in [true, 'true']
+      @base.height = 'auto'
+      @expanded.height = 'auto'
 
     @style[item] = value for item, value of @expanded if @size is 'expanded'
 
-    @value = values.value
-
   publish:
+    autoheight: false
     transformable: true
     busy: false
     size: 'base'

@@ -1,26 +1,24 @@
-var values,
-  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-values = {};
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 Polymer('matrix-card', {
   ready: function() {
-    var attr, i, item, len, ref, ref1, value;
-    ref = this.attributes;
-    for (i = 0, len = ref.length; i < len; i++) {
-      attr = ref[i];
-      values[attr.nodeName] = attr.value;
+    var item, ref, ref1, results, value;
+    if ((ref = this.autoheight) === true || ref === 'true') {
+      this.base.height = 'auto';
+      this.expanded.height = 'auto';
     }
     if (this.size === 'expanded') {
       ref1 = this.expanded;
+      results = [];
       for (item in ref1) {
         value = ref1[item];
-        this.style[item] = value;
+        results.push(this.style[item] = value);
       }
+      return results;
     }
-    return this.value = values.value;
   },
   publish: {
+    autoheight: false,
     transformable: true,
     busy: false,
     size: 'base',

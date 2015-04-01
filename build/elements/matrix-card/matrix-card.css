@@ -6,9 +6,16 @@
   height: 200px;
   z-index: 1; }
 
-h2 {
-  font-size: 3rem;
-  font-weight: 700; }
+:host([no-toolbar]) .toolbar {
+  display: none !important; }
+
+:host([auto-height]) {
+  height: auto !important; }
+
+::content h2 {
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin: 0 0 0 15px; }
 
 paper-ripple {
   padding-top: inherit;
@@ -16,11 +23,14 @@ paper-ripple {
   width: 100%;
   transition: all 1s ease-out; }
 
+:host([no-ripple]) paper-ripple {
+  display: none !important; }
+
 paper-shadow {
   background: white;
   transition: all 1s ease-out; }
 
-.card-header core-icon {
+.toolbar core-icon {
   margin-top: 15px;
   margin-left: 15px;
   height: 32px;

@@ -10,10 +10,10 @@ html,body {
 .scroll {
   overflow-y:scroll;
   z-index:10;
-  box-shadow: 5px 0px 15px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 5px 0px 5px 0px rgba(0, 0, 0, 0.40);
   border-right:1px solid #AAA;
 }
 
 .blurry {
-  -webkit-filter: blur(2px)
+  -webkit-filter: blur(3px)
 }
