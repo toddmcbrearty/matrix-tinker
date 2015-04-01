@@ -148,6 +148,15 @@ Polymer('matrix-card', {
     this.keyframeTransition();
     return this.expanded = false;
   },
+
+  /*
+   * Sequentially applies CSS transitions to an element.  Input may be an element or an instance of
+   * TransitionEvent referencing the element in its @target property
+  #
+   * Areas for improvement:
+   * - string case conversion should be moved to String.prototype or its own class
+   * - keyframe management should be its own class at the element level
+   */
   keyframeTransition: function(event) {
     var computedStyle, element, key, prop, ref, ref1, value, word;
     if (event == null) {
@@ -212,6 +221,10 @@ Polymer('matrix-card', {
       return element.keyframeTransition();
     }
   },
+
+  /*
+   * insert the floated card back into the grid, replacing the ghost
+   */
   stick: function() {
     var ghost;
     ghost = document.querySelector("#ghost-" + this.id);
@@ -230,6 +243,10 @@ Polymer('matrix-card', {
       };
     })(this), 0);
   },
+
+  /*
+   * allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
+   */
   unstick: function() {
     var ghost, style;
     this.unstuck = true;
@@ -253,6 +270,10 @@ Polymer('matrix-card', {
       };
     })(this), 0);
   },
+
+  /*
+   * Attempts to apply Polymer z value to all elements in @element shadow DOM
+   */
   setShadowZ: function(element, value, tagName) {
     var i, item, len, ref, results;
     if (tagName == null) {
@@ -275,6 +296,12 @@ Polymer('matrix-card', {
     }
     return results;
   },
+
+  /*
+   * Applies all computed styles of @model to @target
+  #
+   * Optionally ignore blacklisted styles or only apply whitelisted styles
+   */
   mirrorStyle: function(model, target, blacklist, whitelist) {
     var modelStyle, prop, results, targetStyle, value;
     if (blacklist == null) {
@@ -307,6 +334,10 @@ Polymer('matrix-card', {
     }
     return results;
   },
+
+  /*
+   * ensures @value is an instance of @type, optionally throwing an exception if not
+   */
   typeCheck: function(value, types, throwError) {
     var type, valueType;
     if (throwError == null) {
@@ -332,12 +363,24 @@ Polymer('matrix-card', {
     }
     throw new TypeError("expected [object " + (types.join('/')) + "]; provided " + (Object.prototype.toString.call(value)));
   },
+
+  /*
+   * returns the number of elements preceding @element in the current row
+   */
   leftOffset: function(element) {
     return this.rowOffset(element, 'previous');
   },
+
+  /*
+   * returns the number of elements following @element in the current row
+   */
   rightOffset: function(element) {
     return this.rowOffset(element, 'next');
   },
+
+  /*
+   * worker method for rightOffset and leftOffset
+   */
   rowOffset: function(element, direction) {
     var neighbor;
     neighbor = element[direction + "ElementSibling"];

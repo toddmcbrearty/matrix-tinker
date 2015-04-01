@@ -1,6 +1,8 @@
 :host {
   display:block;
   height: 100%;
+// ehhhhh.... pointer-events: none; works, but lets the mouse interact below.
+//  pointer-events: none;
 
   .drawer-container {
     display:none;
@@ -30,7 +32,7 @@
     right: 0px;
     top: 0px;
     left: auto;
-    background: white;
+    background: #E5E5E5;
   }
 }
 

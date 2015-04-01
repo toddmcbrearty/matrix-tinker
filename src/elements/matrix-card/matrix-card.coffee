@@ -135,14 +135,14 @@ Polymer 'matrix-card',
 
     @expanded = false
 
-  #
+  ###
   # Sequentially applies CSS transitions to an element.  Input may be an element or an instance of
   # TransitionEvent referencing the element in its @target property
   #
   # Areas for improvement:
   # - string case conversion should be moved to String.prototype or its own class
   # - keyframe management should be its own class at the element level
-  #
+  ###
   keyframeTransition: (event = null) ->
 
     element = this if Object::toString.call(this) in ['[object HTMLElement]', '[object HTMLDivElement]']
@@ -180,9 +180,9 @@ Polymer 'matrix-card',
     # if no properties remain, manually re-trigger this method
     element.keyframeTransition() if Object.keys(element.activeKeyframe).length is 0
 
-  #
+  ###
   # insert the floated card back into the grid, replacing the ghost
-  #
+  ###
   stick: ->
 
     # attempt to locate the ghost
@@ -209,9 +209,9 @@ Polymer 'matrix-card',
     , 0
 
 
-  #
+  ###
   # allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
-  #
+  ###
   unstick: ->
     @unstuck = true
 
@@ -241,9 +241,9 @@ Polymer 'matrix-card',
     , 0
 
 
-  #
+  ###
   # Attempts to apply Polymer z value to all elements in @element shadow DOM
-  #
+  ###
   setShadowZ: (element, value, tagName = 'paper-shadow') ->
     return unless parseInt(value) <= 5
     return unless @typeCheck(element, 'HTMLElement', false)
@@ -251,11 +251,11 @@ Polymer 'matrix-card',
     item.setZ?(value) for item in element.shadowRoot.querySelectorAll(tagName)
 
 
-  #
+  ###
   # Applies all computed styles of @model to @target
   #
   # Optionally ignore blacklisted styles or only apply whitelisted styles
-  #
+  ###
   mirrorStyle: (model, target, blacklist = null, whitelist = null) ->
     @typeCheck model, ['HTMLElement', 'HTMLDivElement']
     @typeCheck target, ['HTMLElement', 'HTMLDivElement']
@@ -271,9 +271,9 @@ Polymer 'matrix-card',
       target.style[prop] = value if prop in whitelist
 
 
-  #
+  ###
   # ensures @value is an instance of @type, optionally throwing an exception if not
-  #
+  ###
   typeCheck: (value, types, throwError = true) ->
     valueType = Object::toString.call(value)
     types = [types] unless typeof types is 'string'
@@ -282,23 +282,23 @@ Polymer 'matrix-card',
     throw new TypeError "expected [object #{types.join '/'}]; provided #{Object::toString.call(value)}"
 
 
-  #
+  ###
   # returns the number of elements preceding @element in the current row
-  #
+  ###
   leftOffset: (element) ->
     return @rowOffset(element, 'previous')
 
 
-  #
+  ###
   # returns the number of elements following @element in the current row
-  #
+  ###
   rightOffset: (element) ->
     return @rowOffset(element, 'next')
 
 
-  #
+  ###
   # worker method for rightOffset and leftOffset
-  #
+  ###
   rowOffset: (element, direction) ->
     neighbor = element["#{direction}ElementSibling"]
     return 0 unless neighbor?

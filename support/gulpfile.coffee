@@ -136,3 +136,16 @@ gulp.task 'serve', ->
         path.resolve("#{config.dist}/scripts/*.js"),
         path.resolve("#{config.dist}/index.html")
       ]
+
+gulp.task 'serve-local', ->
+  unless ssh == false
+    console.log 'FATAL: SERVE task only available locally.'
+    return
+
+  browserSync
+    server:
+      baseDir: 'public'
+      index: 'index.html'
+      online: false
+      browser: 'google chrome'
+      notify: true
