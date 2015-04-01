@@ -1,0 +1,9 @@
+:host {
+  height: auto; }
+
+.container {
+  height: auto; }
+
+.container > div {
+  height: 100%;
+  padding: 0px; }
