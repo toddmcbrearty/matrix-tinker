@@ -1,8 +1,19 @@
-@import "partials/fonts";
+//@import "partials/fonts";
 
 html,body {
   font-family: 'Source Sans Pro', sans-serif;
   height: 100%;
   margin: 0;
   background-color: #E5E5E5;
+}
+
+.scroll {
+  overflow-y:scroll;
+  z-index:10;
+  box-shadow: 10px 0px 15px 5px rgba(0,0,0,0.07);
+  border-right:1px solid #AAA;
+}
+
+.blurry {
+  -webkit-filter: blur(2px)
 }

@@ -28,7 +28,8 @@ document.addEventListener('polymer-ready', function() {
 });
 
 $(document).keyup(function(event) {
-  return console.log(event);
+  $('matrix-drawer[application]').toggleClass('active');
+  return $("div:not(.sharp)").toggleClass('blurry');
 });
 
 Matrix = (function() {

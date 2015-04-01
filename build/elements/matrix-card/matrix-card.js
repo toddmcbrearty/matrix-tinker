@@ -20,6 +20,7 @@ Polymer('matrix-card', {
     if (this.unstuck) {
       return;
     }
+    $(this).off('matrixUnstickEnd matrixScaleEnd');
     if (!this.expanded) {
       this.unstick();
       $(this).on('matrixUnstickEnd', this.grow);
@@ -27,16 +28,27 @@ Polymer('matrix-card', {
       return;
     }
     this.unstick();
-    $(this).on('matrixScaleEnd', this.stick);
-    return $(this).on('matrixUnstickEnd', this.shrink);
+    $(this).on('matrixUnstickEnd', this.shrink);
+    return $(this).on('matrixScaleEnd', this.stick);
   },
+
+  /*
+   * Expands a card by keyframes.  Prior to calling this method, the card should be absolutely positioned above
+   * a ghost element
+   */
   grow: function() {
-    var elementTop, ghost, marginOffset, remainingWidth;
+    var compStyle, elementTop, ghost, marginOffset, remainingWidth;
     ghost = document.querySelector("#ghost-" + this.id);
     if (ghost == null) {
       return;
     }
-    this.fromStyle = getComputedStyle(this);
+    compStyle = getComputedStyle(this);
+    this.fromStyle = {
+      width: parseInt(compStyle.width) || 0,
+      height: parseInt(compStyle.height) || 0,
+      marginLeft: parseInt(compStyle.marginLeft) || 0,
+      marginTop: parseInt(compStyle.marginTop) || 0
+    };
     remainingWidth = ghost.offsetWidth + (this.rightOffset(ghost) * ghost.offsetWidth) + (this.rightOffset(ghost) * (parseInt(ghost.style.marginLeft) || 0)) - 1;
     if (this.leftOffset(ghost) === 0) {
       elementTop = (parseInt(ghost.offsetTop) || 0) - (parseInt(ghost.style.marginTop) || 0);
@@ -48,7 +60,7 @@ Polymer('matrix-card', {
     console.log(this.rightOffset(ghost));
     ghost.keyframeStack = [
       {
-        transition: 'all 0.6s ease-in',
+        transition: 'all 0.3s linear',
         marginLeft: '0px',
         width: remainingWidth + "px",
         marginBottom: marginOffset + "px"
@@ -60,15 +72,13 @@ Polymer('matrix-card', {
     ];
     this.keyframeStack = [
       {
-        transition: 'all 0.6s ease-out',
+        transition: 'all 0.7s ease-in',
         left: '0px',
         width: "100%",
         marginLeft: '0px',
-        height: '175px'
-      }, {
-        top: elementTop + "px",
-        height: '400px'
-      }
+        height: '400px',
+        top: elementTop + "px"
+      }, {}
     ];
     ghost.keyframeTransition = this.keyframeTransition;
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
@@ -77,48 +87,58 @@ Polymer('matrix-card', {
     this.keyframeTransition();
     this.expanded = true;
   },
+
+  /*
+   * Returns an element to its original size
+   */
   shrink: function() {
-    var elementWidthRequired, ghost, left, notFirstElementInSet, prev, prevRowCanFit, prevRowCapacity, top;
+    var available, col, fullWidth, ghost, isFirst, left, prev, ref, top;
     ghost = document.querySelector("#ghost-" + this.id);
     if (ghost == null) {
       return;
     }
-    prev = ghost.previousElementSibling;
-    notFirstElementInSet = (prev != null ? prev.localName : void 0) === this.localName;
-    elementWidthRequired = (parseInt(this.fromStyle.width) || 0) + (parseInt(this.fromStyle.marginLeft) || 0);
-    prevRowCapacity = (window.innerWidth - (prev != null ? prev.offsetLeft : void 0) + (prev != null ? prev.offsetWidth : void 0)) || 0;
-    prevRowCanFit = prevRowCapacity >= elementWidthRequired;
-    if (!(notFirstElementInSet || prevRowCanFit || !(prev != null ? prev.expanded : void 0))) {
-      top = parseInt(this.style.offsetTop) || 0;
-      left = parseInt(this.style.offsetLeft) || 0;
+    if (((ref = ghost.previousElementSibling) != null ? ref.localName : void 0) === this.localName) {
+      prev = ghost.previousElementSibling;
+    }
+    fullWidth = this.fromStyle.width + this.fromStyle.marginLeft;
+    isFirst = (prev != null ? prev.localName : void 0) !== this.localName;
+    available = this.parentNode.offsetWidth - (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth);
+    if (isFirst || available <= fullWidth) {
+      col = 0;
+    }
+    if (col == null) {
+      col = (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth) / fullWidth;
+    }
+    left = col * fullWidth;
+    if (col !== 0) {
+      left -= this.fromStyle.marginLeft;
+    }
+    if (isFirst) {
+      top = 0;
     }
     if (top == null) {
-      top = prev != null ? prev.offsetTop : void 0;
-    }
-    if (left == null) {
-      left = (prev != null ? prev.offsetLeft : void 0) + 200 + 40;
+      top = ((available >= fullWidth ? prev.offsetTop : void 0) || this.style.offsetTop) - this.fromStyle.marginTop;
     }
     ghost.keyframeStack = [
       {
-        transition: '0.6s all ease-out',
-        width: '200px',
-        height: '200px',
-        marginLeft: '40px',
-        marginTop: '40px'
+        transition: '0.6s all linear',
+        width: this.fromStyle.width + "px",
+        height: this.fromStyle.height + "px",
+        marginLeft: this.fromStyle.marginLeft + "px",
+        marginTop: this.fromStyle.marginTop + "px"
       }
     ];
     this.keyframeStack = [
       {
-        transition: '0.6s all ease-out',
-        width: '200px',
-        height: '200px',
-        marginLeft: '40px',
+        transition: "0.7s all ease-in",
+        width: this.fromStyle.width + "px",
+        height: this.fromStyle.height + "px",
+        marginLeft: this.fromStyle.marginLeft + "px",
+        top: top + "px",
         left: left + "px"
       }, {
-        top: top + "px"
-      }, {
         transition: '',
-        left: '0px'
+        left: "0px"
       }
     ];
     ghost.keyframeTransition = this.keyframeTransition;

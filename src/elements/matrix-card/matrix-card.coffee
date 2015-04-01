@@ -16,6 +16,8 @@ Polymer 'matrix-card',
 
     return if @unstuck
 
+    $(this).off('matrixUnstickEnd matrixScaleEnd')
+
     unless @expanded
       @unstick()
       $(this).on 'matrixUnstickEnd', @grow
@@ -24,19 +26,25 @@ Polymer 'matrix-card',
 
 
     @unstick()
-    $(this).on 'matrixScaleEnd', @stick
     $(this).on 'matrixUnstickEnd', @shrink
+    $(this).on 'matrixScaleEnd', @stick
 
 
-  #
+  ###
   # Expands a card by keyframes.  Prior to calling this method, the card should be absolutely positioned above
   # a ghost element
-  #
+  ###
   grow: ->
     ghost = document.querySelector("#ghost-#{@id}")
     return unless ghost?
 
-    @fromStyle = getComputedStyle(this)
+#    @fromStyle = getComputedStyle(this)
+    compStyle = getComputedStyle(this)
+    @fromStyle =
+      width: parseInt(compStyle.width) or 0
+      height: parseInt(compStyle.height) or 0
+      marginLeft: parseInt(compStyle.marginLeft) or 0
+      marginTop: parseInt(compStyle.marginTop) or 0
 
     # blocker width, to push remaining elements off the end of the row
     remainingWidth = ghost.offsetWidth + (@rightOffset(ghost) * ghost.offsetWidth) + (@rightOffset(ghost) * (parseInt(ghost.style.marginLeft) or 0)) - 1
@@ -50,13 +58,13 @@ Polymer 'matrix-card',
     console.log @rightOffset(ghost)
 
     ghost.keyframeStack = [
-      {transition: 'all 0.6s ease-in', marginLeft: '0px', width: "#{remainingWidth}px", marginBottom: "#{marginOffset}px"}
+      {transition: 'all 0.3s linear', marginLeft: '0px', width: "#{remainingWidth}px", marginBottom: "#{marginOffset}px"}
       {width: '100%', height: '400px', marginBottom: '0px'},
     ]
 
     @keyframeStack = [
-      {transition: 'all 0.6s ease-out', left: '0px', width: "100%", marginLeft: '0px', height: '175px'},
-      {top: "#{elementTop}px", height: '400px'}
+      {transition: 'all 0.7s ease-in', left: '0px', width: "100%", marginLeft: '0px', height: '400px', top: "#{elementTop}px"},
+      {}
     ]
 
     ghost.keyframeTransition = @keyframeTransition
@@ -70,36 +78,51 @@ Polymer 'matrix-card',
 
     return
 
-  #
-  #
-  #
+  ###
+  # Returns an element to its original size
+  ###
   shrink: ->
     ghost = document.querySelector("#ghost-#{@id}")
     return unless ghost?
 
-    prev = ghost.previousElementSibling
+    # find the element immediately before the ghost, if one exists
+    prev = ghost.previousElementSibling unless ghost.previousElementSibling?.localName isnt @localName
 
-    notFirstElementInSet = prev?.localName is @localName
-    elementWidthRequired = (parseInt(@fromStyle.width) or 0) + (parseInt(@fromStyle.marginLeft) or 0)
-    prevRowCapacity = (window.innerWidth - prev?.offsetLeft + prev?.offsetWidth) or 0
-    prevRowCanFit = prevRowCapacity >= elementWidthRequired
+    fullWidth = @fromStyle.width + @fromStyle.marginLeft
+    isFirst = prev?.localName isnt @localName
+    available = @parentNode.offsetWidth - ((prev?.offsetLeft or 0) + fullWidth)
 
-    unless notFirstElementInSet or prevRowCanFit or not prev?.expanded
-      top = (parseInt(@style.offsetTop) or 0)
-      left = (parseInt(@style.offsetLeft) or 0)
+    # Determine the element's target left
+    col = 0 if isFirst or available <= fullWidth
+    col ?= ((prev?.offsetLeft or 0) + fullWidth) / fullWidth
+    left = col * fullWidth
+    left -= @fromStyle.marginLeft unless col is 0
 
-    top ?= prev?.offsetTop
-    left ?= prev?.offsetLeft + 200 + 40
+    # Determine the element's target top
+    top = 0 if isFirst
+    top ?= ((prev.offsetTop if available >= fullWidth) or @style.offsetTop) - @fromStyle.marginTop
 
     ghost.keyframeStack = [
-      {transition: '0.6s all ease-out', width: '200px', height: '200px', marginLeft: '40px', marginTop: '40px'}
+      {
+        transition: '0.6s all linear',
+        width: "#{@fromStyle.width}px",
+        height: "#{@fromStyle.height}px",
+        marginLeft: "#{@fromStyle.marginLeft}px",
+        marginTop: "#{@fromStyle.marginTop}px"
+      }
 #      {transition: '1s all ease-out', width: @fromStyle.width, height: @fromStyle.height, marginLeft: @fromStyle.marginLeft, marginTop: @fromStyle.marginTop}
     ]
 
     @keyframeStack = [
-      {transition: '0.6s all ease-out', width: '200px', height: '200px', marginLeft: '40px', left: "#{left}px"}
-      {top: "#{top}px"}
-      {transition: '', left: '0px'}
+      {
+        transition: "0.7s all ease-in",
+        width: "#{@fromStyle.width}px",
+        height: "#{@fromStyle.height}px",
+        marginLeft: "#{@fromStyle.marginLeft}px"
+        top: "#{top}px",
+        left: "#{left}px"
+      }
+      {transition: '', left: "0px"}
     ]
 
     ghost.keyframeTransition = @keyframeTransition

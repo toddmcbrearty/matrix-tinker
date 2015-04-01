@@ -8,7 +8,8 @@ document.addEventListener 'polymer-ready', ->
   matrix.display()
 
 $(document).keyup (event) ->
-  console.log event
+  $('matrix-drawer[application]').toggleClass('active')
+  $("div:not(.sharp)").toggleClass('blurry')
 
 
 class Matrix
