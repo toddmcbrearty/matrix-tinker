@@ -1,0 +1,17 @@
+<polymer-element name="matrix-scaffold">
+    <template>
+        <link href="matrix-scaffold.css" rel="stylesheet" shim-shadowdom>
+        <div class="container" horizontal layout fit>
+            <div class="sharp">
+                <content select="[application], .application"></content>
+            </div>
+            <div flex layout horizontal class="sheet">
+                <content select=":not(matrix-drawer)"></content>
+            </div>
+            <div>
+                <content select="matrix-drawer"></content>
+            </div>
+        </div>
+    </template>
+    <script src="matrix-scaffold.js"></script>
+</polymer-element>
