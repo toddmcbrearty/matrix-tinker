@@ -69,8 +69,6 @@ Polymer 'matrix-card',
 
     marginOffset = (200 unless @leftOffset(ghost) is 0) or 0
 
-    console.log @rightOffset(ghost)
-
     ghost.keyframeStack = [
       {transition: 'all 0.3s linear', marginLeft: '0px', width: "#{remainingWidth}px", marginBottom: "#{marginOffset}px"}
       {width: @expanded.width, height: @expanded.height, marginBottom: '0px'},
@@ -114,14 +112,15 @@ Polymer 'matrix-card',
     available = @parentNode.offsetWidth - ((prev?.offsetLeft or 0) + fullWidth)
 
     # Determine the element's target left
-    col = 0 if isFirst or available <= fullWidth
+    col = 0 if isFirst or available <= fullWidth or prev?.size isnt 'base'
     col ?= ((prev?.offsetLeft or 0) + fullWidth) / fullWidth
     left = col * fullWidth
     left -= @fromStyle.marginLeft unless col is 0
 
     # Determine the element's target top
     top = 0 if isFirst
-    top ?= ((prev.offsetTop if available >= fullWidth) or @style.offsetTop) - @fromStyle.marginTop
+    top ?= @offsetTop - @fromStyle.marginTop unless prev?.size is 'base'
+    top ?= ((prev.offsetTop if available >= fullWidth) or @offsetTop) - @fromStyle.marginTop
 
     ghost.keyframeStack = [
       {

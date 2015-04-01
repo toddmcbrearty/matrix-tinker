@@ -79,7 +79,6 @@ Polymer('matrix-card', {
       elementTop = parseInt(ghost.offsetTop) + parseInt(ghost.offsetHeight);
     }
     marginOffset = (this.leftOffset(ghost) !== 0 ? 200 : void 0) || 0;
-    console.log(this.rightOffset(ghost));
     ghost.keyframeStack = [
       {
         transition: 'all 0.3s linear',
@@ -125,7 +124,7 @@ Polymer('matrix-card', {
     fullWidth = this.fromStyle.width + this.fromStyle.marginLeft;
     isFirst = (prev != null ? prev.localName : void 0) !== this.localName;
     available = this.parentNode.offsetWidth - (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth);
-    if (isFirst || available <= fullWidth) {
+    if (isFirst || available <= fullWidth || (prev != null ? prev.size : void 0) !== 'base') {
       col = 0;
     }
     if (col == null) {
@@ -138,8 +137,13 @@ Polymer('matrix-card', {
     if (isFirst) {
       top = 0;
     }
+    if ((prev != null ? prev.size : void 0) !== 'base') {
+      if (top == null) {
+        top = this.offsetTop - this.fromStyle.marginTop;
+      }
+    }
     if (top == null) {
-      top = ((available >= fullWidth ? prev.offsetTop : void 0) || this.style.offsetTop) - this.fromStyle.marginTop;
+      top = ((available >= fullWidth ? prev.offsetTop : void 0) || this.offsetTop) - this.fromStyle.marginTop;
     }
     ghost.keyframeStack = [
       {
