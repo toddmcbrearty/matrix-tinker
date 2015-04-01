@@ -5,29 +5,43 @@ Polymer 'matrix-card',
     for attr in @attributes
       values[attr.nodeName] = attr.value
 
+    @style[item] = value for item, value of @expanded if @size is 'expanded'
+
     @value = values.value
 
+  publish:
+    transformable: true
+    busy: false
+    size: 'base'
+    debug: null
+    base:
+      height: '200px'
+      width: '200px'
+      marginLeft: '40px'
+      marginTop: '40px'
+    expanded:
+      height: '400px'
+      width: '100%'
+      marginLeft: '0px'
+      marginTop: '40px'
 
-  expanded: false
-  ghostVisible: false
-  base: 200
+  handleClick: () ->
 
-  handleClick: (event, detail, sender) ->
-
-    return if @unstuck
+    return unless @transformable and not @busy
 
     $(this).off('matrixUnstickEnd matrixScaleEnd')
 
-    unless @expanded
+    if @size is 'base'
       @unstick()
       $(this).on 'matrixUnstickEnd', @grow
       $(this).on 'matrixScaleEnd', @stick
       return
 
-
-    @unstick()
-    $(this).on 'matrixUnstickEnd', @shrink
-    $(this).on 'matrixScaleEnd', @stick
+    if @size is 'expanded'
+      @unstick()
+      $(this).on 'matrixUnstickEnd', @shrink
+      $(this).on 'matrixScaleEnd', @stick
+      return
 
 
   ###
@@ -35,6 +49,7 @@ Polymer 'matrix-card',
   # a ghost element
   ###
   grow: ->
+
     ghost = document.querySelector("#ghost-#{@id}")
     return unless ghost?
 
@@ -59,11 +74,18 @@ Polymer 'matrix-card',
 
     ghost.keyframeStack = [
       {transition: 'all 0.3s linear', marginLeft: '0px', width: "#{remainingWidth}px", marginBottom: "#{marginOffset}px"}
-      {width: '100%', height: '400px', marginBottom: '0px'},
+      {width: @expanded.width, height: @expanded.height, marginBottom: '0px'},
     ]
 
     @keyframeStack = [
-      {transition: 'all 0.7s ease-in', left: '0px', width: "100%", marginLeft: '0px', height: '400px', top: "#{elementTop}px"},
+      {
+        transition: 'all 0.7s ease-in',
+        left: '0px',
+        width: @expanded.width,
+        marginLeft: @expanded.marginLeft,
+        height: @expanded.height,
+        top: "#{elementTop}px"
+      }
       {}
     ]
 
@@ -74,7 +96,7 @@ Polymer 'matrix-card',
     @addEventListener('webkitTransitionEnd', @keyframeTransition)
     @keyframeTransition()
 
-    @expanded = true
+    @size = 'expanded'
 
     return
 
@@ -105,10 +127,10 @@ Polymer 'matrix-card',
     ghost.keyframeStack = [
       {
         transition: '0.6s all linear',
-        width: "#{@fromStyle.width}px",
-        height: "#{@fromStyle.height}px",
-        marginLeft: "#{@fromStyle.marginLeft}px",
-        marginTop: "#{@fromStyle.marginTop}px"
+        width: @base.width,
+        height: @base.height,
+        marginLeft: @base.marginLeft,
+        marginTop: @base.marginTop
       }
 #      {transition: '1s all ease-out', width: @fromStyle.width, height: @fromStyle.height, marginLeft: @fromStyle.marginLeft, marginTop: @fromStyle.marginTop}
     ]
@@ -116,9 +138,9 @@ Polymer 'matrix-card',
     @keyframeStack = [
       {
         transition: "0.7s all ease-in",
-        width: "#{@fromStyle.width}px",
-        height: "#{@fromStyle.height}px",
-        marginLeft: "#{@fromStyle.marginLeft}px"
+        width: @base.width,
+        height: @base.height,
+        marginLeft: @base.marginLeft
         top: "#{top}px",
         left: "#{left}px"
       }
@@ -133,7 +155,7 @@ Polymer 'matrix-card',
     @addEventListener('webkitTransitionEnd', @keyframeTransition)
     @keyframeTransition()
 
-    @expanded = false
+    @size = 'base'
 
   ###
   # Sequentially applies CSS transitions to an element.  Input may be an element or an instance of
@@ -205,7 +227,7 @@ Polymer 'matrix-card',
     # when the execution stack is finished, dispatch a new event
     setTimeout =>
       @dispatchEvent(new Event('matrixStickEnd'))
-      @unstuck = false
+      @busy = false
     , 0
 
 
@@ -213,7 +235,7 @@ Polymer 'matrix-card',
   # allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
   ###
   unstick: ->
-    @unstuck = true
+    @busy = true
 
     # lift any paper shadow elements
     @setShadowZ(this, 5)
@@ -222,7 +244,7 @@ Polymer 'matrix-card',
     ghost = document.createElement('div')
     ghost.id = "ghost-#{@id}"
     ghost.className = 'matrix-ghost'
-    ghost.style.background = "#999" if @ghostVisible
+    ghost.style.background = "#999" if @debug?
     @mirrorStyle(this, ghost)
 
     # detach element and float in place
@@ -309,7 +331,7 @@ Polymer 'matrix-card',
     return @rowOffset.apply(this, [neighbor, direction]) if neighbor.style.position is 'absolute'
 
     # ensure next node is not expanded
-    return 0 if neighbor.expanded
+    return 0 if neighbor.size is 'expanded'
 
     # target has same or lower left-offset; it's the first in its list
     return 0 if element.offsetLeft <= neighbor.offsetLeft and direction is 'previous'

@@ -8,8 +8,6 @@
   :host .drawer-content {
     width: 300px;
     height: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
     background: #36454F; }
 
 :host([right]) {
@@ -19,19 +17,16 @@
   top: 0px; }
   :host([right]) .drawer-content {
     display: block;
-    right: 0px;
-    top: 0px;
-    left: auto;
     background: #E5E5E5; }
 
 :host([modal]) {
   width: 100%; }
   :host([modal]) .drawer-placeholder {
-    width: 20px; }
+    width: 15px; }
   :host([modal]) .drawer-content {
     position: absolute;
     z-index: 15;
-    left: -320px;
+    left: -285px;
     transition: all 0.2s ease; }
   :host([modal]) .drawer-container {
     position: absolute;

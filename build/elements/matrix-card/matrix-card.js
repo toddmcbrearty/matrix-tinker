@@ -5,31 +5,55 @@ values = {};
 
 Polymer('matrix-card', {
   ready: function() {
-    var attr, i, len, ref;
+    var attr, i, item, len, ref, ref1, value;
     ref = this.attributes;
     for (i = 0, len = ref.length; i < len; i++) {
       attr = ref[i];
       values[attr.nodeName] = attr.value;
     }
+    if (this.size === 'expanded') {
+      ref1 = this.expanded;
+      for (item in ref1) {
+        value = ref1[item];
+        this.style[item] = value;
+      }
+    }
     return this.value = values.value;
   },
-  expanded: false,
-  ghostVisible: false,
-  base: 200,
-  handleClick: function(event, detail, sender) {
-    if (this.unstuck) {
+  publish: {
+    transformable: true,
+    busy: false,
+    size: 'base',
+    debug: null,
+    base: {
+      height: '200px',
+      width: '200px',
+      marginLeft: '40px',
+      marginTop: '40px'
+    },
+    expanded: {
+      height: '400px',
+      width: '100%',
+      marginLeft: '0px',
+      marginTop: '40px'
+    }
+  },
+  handleClick: function() {
+    if (!(this.transformable && !this.busy)) {
       return;
     }
     $(this).off('matrixUnstickEnd matrixScaleEnd');
-    if (!this.expanded) {
+    if (this.size === 'base') {
       this.unstick();
       $(this).on('matrixUnstickEnd', this.grow);
       $(this).on('matrixScaleEnd', this.stick);
       return;
     }
-    this.unstick();
-    $(this).on('matrixUnstickEnd', this.shrink);
-    return $(this).on('matrixScaleEnd', this.stick);
+    if (this.size === 'expanded') {
+      this.unstick();
+      $(this).on('matrixUnstickEnd', this.shrink);
+      $(this).on('matrixScaleEnd', this.stick);
+    }
   },
 
   /*
@@ -65,8 +89,8 @@ Polymer('matrix-card', {
         width: remainingWidth + "px",
         marginBottom: marginOffset + "px"
       }, {
-        width: '100%',
-        height: '400px',
+        width: this.expanded.width,
+        height: this.expanded.height,
         marginBottom: '0px'
       }
     ];
@@ -74,9 +98,9 @@ Polymer('matrix-card', {
       {
         transition: 'all 0.7s ease-in',
         left: '0px',
-        width: "100%",
-        marginLeft: '0px',
-        height: '400px',
+        width: this.expanded.width,
+        marginLeft: this.expanded.marginLeft,
+        height: this.expanded.height,
         top: elementTop + "px"
       }, {}
     ];
@@ -85,7 +109,7 @@ Polymer('matrix-card', {
     ghost.keyframeTransition();
     this.addEventListener('webkitTransitionEnd', this.keyframeTransition);
     this.keyframeTransition();
-    this.expanded = true;
+    this.size = 'expanded';
   },
 
   /*
@@ -122,18 +146,18 @@ Polymer('matrix-card', {
     ghost.keyframeStack = [
       {
         transition: '0.6s all linear',
-        width: this.fromStyle.width + "px",
-        height: this.fromStyle.height + "px",
-        marginLeft: this.fromStyle.marginLeft + "px",
-        marginTop: this.fromStyle.marginTop + "px"
+        width: this.base.width,
+        height: this.base.height,
+        marginLeft: this.base.marginLeft,
+        marginTop: this.base.marginTop
       }
     ];
     this.keyframeStack = [
       {
         transition: "0.7s all ease-in",
-        width: this.fromStyle.width + "px",
-        height: this.fromStyle.height + "px",
-        marginLeft: this.fromStyle.marginLeft + "px",
+        width: this.base.width,
+        height: this.base.height,
+        marginLeft: this.base.marginLeft,
         top: top + "px",
         left: left + "px"
       }, {
@@ -146,7 +170,7 @@ Polymer('matrix-card', {
     ghost.keyframeTransition();
     this.addEventListener('webkitTransitionEnd', this.keyframeTransition);
     this.keyframeTransition();
-    return this.expanded = false;
+    return this.size = 'base';
   },
 
   /*
@@ -239,7 +263,7 @@ Polymer('matrix-card', {
     return setTimeout((function(_this) {
       return function() {
         _this.dispatchEvent(new Event('matrixStickEnd'));
-        return _this.unstuck = false;
+        return _this.busy = false;
       };
     })(this), 0);
   },
@@ -249,12 +273,12 @@ Polymer('matrix-card', {
    */
   unstick: function() {
     var ghost, style;
-    this.unstuck = true;
+    this.busy = true;
     this.setShadowZ(this, 5);
     ghost = document.createElement('div');
     ghost.id = "ghost-" + this.id;
     ghost.className = 'matrix-ghost';
-    if (this.ghostVisible) {
+    if (this.debug != null) {
       ghost.style.background = "#999";
     }
     this.mirrorStyle(this, ghost);
@@ -393,7 +417,7 @@ Polymer('matrix-card', {
     if (neighbor.style.position === 'absolute') {
       return this.rowOffset.apply(this, [neighbor, direction]);
     }
-    if (neighbor.expanded) {
+    if (neighbor.size === 'expanded') {
       return 0;
     }
     if (element.offsetLeft <= neighbor.offsetLeft && direction === 'previous') {

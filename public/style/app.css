@@ -7,7 +7,7 @@ html, body {
 .scroll {
   overflow-y: scroll;
   z-index: 10;
-  box-shadow: 10px 0px 15px 5px rgba(0, 0, 0, 0.07);
+  box-shadow: 5px 0px 3px 5px rgba(0, 0, 0, 0.2);
   border-right: 1px solid #AAA; }
 
 .blurry {
