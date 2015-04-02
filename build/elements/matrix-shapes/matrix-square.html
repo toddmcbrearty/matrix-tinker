@@ -1,0 +1,31 @@
+<polymer-element name="matrix-square" attributes="side" constructor="MatrixSquare">
+    <script>
+        Polymer('matrix-square',
+        {
+            publish:
+            {
+                side: 100
+            },
+            ready: function()
+            {
+                var side;
+                side = parseInt(this.side);
+                if (isNaN(side))
+                {
+                    side = 100;
+                }
+                this.style.height = side + 'px';
+                this.style.width = side + 'px';
+            }
+        })
+    </script>
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+        <content></content>
+    </template>
+</polymer-element>

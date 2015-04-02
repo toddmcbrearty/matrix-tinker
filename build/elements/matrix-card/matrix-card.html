@@ -2,12 +2,13 @@
 <link rel="import" href="../../../vendor/bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../../../vendor/bower_components/core-icons/core-icons.html">
 <polymer-element name="matrix-card" constructor="MatrixCard" attributes="data" on-click="{{handleClick}}">
-    <template relative>
+    <template>
         <link href="matrix-card.css" rel="stylesheet" shim-shadowdom>
-        <paper-shadow fit z="1" animated="true">
-            <div class="toolbar" layout horizontal center>
-                <core-icon icon="{{data.icon}}"></core-icon>
-            </div>
+        <paper-shadow z="1" animated>
+            <matrix-toolbar>
+                <content select="core-icon, img"></content>
+                <content select=".toolbar"></content>
+            </matrix-toolbar>
             <content></content>
             <paper-ripple fit class="recenteringTouch"></paper-ripple>
         </paper-shadow>

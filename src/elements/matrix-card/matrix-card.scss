@@ -1,36 +1,14 @@
 :host {
+  display: block;
   position: relative;
-  margin-top: 40px;
-  margin-left: 40px;
-  width: 200px;
-  height: 200px;
-  z-index: 1;
+  box-sizing: border-box;
+  background: white;
 }
 
-:host([no-toolbar]) {
-  .toolbar {
+:host([naked]) {
+  matrix-toolbar {
     display: none!important;
   }
-}
-
-:host([auto-height]) {
-  height: auto!important;
-}
-
-
-
-::content h2 {
-  font-size: 0.8rem;
-  font-weight: 400;
-  margin: 0 0 0 15px;
-}
-
-
-paper-ripple {
-  padding-top: inherit;
-  height: 100%;
-  width: 100%;
-  transition: all 1s ease-out;
 }
 
 :host([no-ripple]) {
@@ -40,14 +18,7 @@ paper-ripple {
 }
 
 paper-shadow {
-  background: white;
-  transition: all 1s ease-out;
-}
-
-.toolbar core-icon {
-  margin-top: 15px;
-  margin-left: 15px;
-  height: 32px;
-  width: 32px;
-  color: #999;
+  background-color: rgba(0,0,0,0);
+  height: 100%;
+  width: 100%;
 }

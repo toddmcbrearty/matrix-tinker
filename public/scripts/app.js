@@ -1,4 +1,4 @@
-var Matrix, i, icons, item, model, range, results;
+var Matrix, dims, i, icons, item, model, range, results;
 
 icons = ['cloud', 'attachment', 'inbox', 'polymer', 'redeem', 'settings', 'thumb-up', 'translate', 'warning'];
 
@@ -8,6 +8,11 @@ range = (function() {
   return results;
 }).apply(this);
 
+dims = {
+  width: '100%',
+  height: '500px'
+};
+
 model = (function() {
   var j, len, results1;
   results1 = [];
@@ -15,7 +20,8 @@ model = (function() {
     item = range[j];
     results1.push({
       value: ++item,
-      icon: icons[Math.floor(Math.random() * icons.length)]
+      icon: icons[Math.floor(Math.random() * icons.length)],
+      dims: dims
     });
   }
   return results1;

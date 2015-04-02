@@ -7,8 +7,13 @@ html, body {
 .scroll {
   overflow-y: scroll;
   z-index: 10;
-  box-shadow: 5px 0px 5px 0px rgba(0, 0, 0, 0.4);
-  border-right: 1px solid #AAA; }
+  box-shadow: 5px 0px 5px 0px rgba(0, 0, 0, 0.4); }
 
 .blurry {
   -webkit-filter: blur(1px); }
+
+matrix-card.card {
+  height: 200px;
+  width: 200px;
+  margin-left: 40px;
+  margin-top: 40px; }

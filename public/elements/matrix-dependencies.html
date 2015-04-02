@@ -103,6 +103,18 @@ html /deep/ core-icon {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 </head><body><div hidden=""><polymer-element name="paper-shadow" assetpath="../../vendor/bower_components/paper-shadow/">
 
 <template>
@@ -1338,490 +1350,68 @@ html /deep/ core-icon {
 </defs></svg>
 </core-iconset-svg>
 <polymer-element name="matrix-card" constructor="MatrixCard" attributes="data" on-click="{{handleClick}}" assetpath="matrix-card/">
-    <template relative="">
+    <template>
         <style shim-shadowdom="">:host {
+  display: block;
   position: relative;
-  margin-top: 40px;
-  margin-left: 40px;
-  width: 200px;
-  height: 200px;
-  z-index: 1; }
+  box-sizing: border-box;
+  background: white; }
 
-:host([no-toolbar]) .toolbar {
+:host([naked]) matrix-toolbar {
   display: none !important; }
-
-:host([auto-height]) {
-  height: auto !important; }
-
-::content h2 {
-  font-size: 0.8rem;
-  font-weight: 400;
-  margin: 0 0 0 15px; }
-
-paper-ripple {
-  padding-top: inherit;
-  height: 100%;
-  width: 100%;
-  transition: all 1s ease-out; }
 
 :host([no-ripple]) paper-ripple {
   display: none !important; }
 
 paper-shadow {
-  background: white;
-  transition: all 1s ease-out; }
-
-.toolbar core-icon {
-  margin-top: 15px;
-  margin-left: 15px;
-  height: 32px;
-  width: 32px;
-  color: #999; }
+  background-color: transparent;
+  height: 100%;
+  width: 100%; }
 </style>
-        <paper-shadow fit="" z="1" animated="true">
-            <div class="toolbar" layout="" horizontal="" center="">
-                <core-icon icon="{{data.icon}}"></core-icon>
-            </div>
+        <paper-shadow z="1" animated="">
+            <matrix-toolbar>
+                <content select="core-icon, img"></content>
+                <content select=".toolbar"></content>
+            </matrix-toolbar>
             <content></content>
             <paper-ripple fit="" class="recenteringTouch"></paper-ripple>
         </paper-shadow>
     </template>
-    <script>var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-Polymer('matrix-card', {
-  ready: function() {
-    var item, ref, ref1, results, value;
-    if ((ref = this.autoheight) === true || ref === 'true') {
-      this.base.height = 'auto';
-      this.expanded.height = 'auto';
-    }
-    if (this.size === 'expanded') {
-      ref1 = this.expanded;
-      results = [];
-      for (item in ref1) {
-        value = ref1[item];
-        results.push(this.style[item] = value);
-      }
-      return results;
-    }
-  },
+    <script>Polymer('matrix-card', {
+  ready: function() {},
   publish: {
-    autoheight: false,
     transformable: true,
-    busy: false,
+    fullSizeDims: {},
     size: 'base',
-    debug: null,
-    base: {
-      height: '200px',
-      width: '200px',
-      marginLeft: '40px',
-      marginTop: '40px'
-    },
-    expanded: {
-      height: '400px',
-      width: '100%',
-      marginLeft: '0px',
-      marginTop: '40px'
-    }
+    debug: null
   },
-  handleClick: function() {
-    if (!(this.transformable && !this.busy)) {
+  handleClick: function(event) {
+    var ghost, meta, transformer;
+    if (!this.transformable) {
       return;
     }
     $(this).off('matrixUnstickEnd matrixScaleEnd');
+    meta = document.querySelector('core-meta');
+    ghost = new MatrixGhost();
+    ghost.assign(this);
+    transformer = new MatrixFloatingTransform();
+    this.appendChild(transformer);
     if (this.size === 'base') {
-      this.unstick();
-      $(this).on('matrixUnstickEnd', this.grow);
-      $(this).on('matrixScaleEnd', this.stick);
+      ghost.unstick();
+      $(this).on('matrixUnstickEnd', transformer.grow);
+      $(this).on('matrixScaleEnd', ghost.stick);
       return;
     }
     if (this.size === 'expanded') {
-      this.unstick();
-      $(this).on('matrixUnstickEnd', this.shrink);
-      $(this).on('matrixScaleEnd', this.stick);
+      ghost.unstick();
+      $(this).on('matrixUnstickEnd', transformer.shrink);
+      $(this).on('matrixScaleEnd', ghost.stick);
     }
-  },
-
-  /*
-   * Expands a card by keyframes.  Prior to calling this method, the card should be absolutely positioned above
-   * a ghost element
-   */
-  grow: function() {
-    var compStyle, elementTop, ghost, marginOffset, remainingWidth;
-    ghost = document.querySelector("#ghost-" + this.id);
-    if (ghost == null) {
-      return;
-    }
-    compStyle = getComputedStyle(this);
-    this.fromStyle = {
-      width: parseInt(compStyle.width) || 0,
-      height: parseInt(compStyle.height) || 0,
-      marginLeft: parseInt(compStyle.marginLeft) || 0,
-      marginTop: parseInt(compStyle.marginTop) || 0
-    };
-    remainingWidth = ghost.offsetWidth + (this.rightOffset(ghost) * ghost.offsetWidth) + (this.rightOffset(ghost) * (parseInt(ghost.style.marginLeft) || 0)) - 1;
-    if (this.leftOffset(ghost) === 0) {
-      elementTop = (parseInt(ghost.offsetTop) || 0) - (parseInt(ghost.style.marginTop) || 0);
-    }
-    if (elementTop == null) {
-      elementTop = parseInt(ghost.offsetTop) + parseInt(ghost.offsetHeight);
-    }
-    marginOffset = (this.leftOffset(ghost) !== 0 ? 200 : void 0) || 0;
-    ghost.keyframeStack = [
-      {
-        transition: 'all 0.3s linear',
-        marginLeft: '0px',
-        width: remainingWidth + "px",
-        marginBottom: marginOffset + "px"
-      }, {
-        width: this.expanded.width,
-        height: this.expanded.height,
-        marginBottom: '0px'
-      }
-    ];
-    this.keyframeStack = [
-      {
-        transition: 'all 0.7s ease-in',
-        left: '0px',
-        width: this.expanded.width,
-        marginLeft: this.expanded.marginLeft,
-        height: this.expanded.height,
-        top: elementTop + "px"
-      }, {}
-    ];
-    ghost.keyframeTransition = this.keyframeTransition;
-    ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
-    ghost.keyframeTransition();
-    this.addEventListener('webkitTransitionEnd', this.keyframeTransition);
-    this.keyframeTransition();
-    this.size = 'expanded';
-  },
-
-  /*
-   * Returns an element to its original size
-   */
-  shrink: function() {
-    var available, col, fullWidth, ghost, isFirst, left, prev, ref, top;
-    ghost = document.querySelector("#ghost-" + this.id);
-    if (ghost == null) {
-      return;
-    }
-    if (((ref = ghost.previousElementSibling) != null ? ref.localName : void 0) === this.localName) {
-      prev = ghost.previousElementSibling;
-    }
-    fullWidth = this.fromStyle.width + this.fromStyle.marginLeft;
-    isFirst = (prev != null ? prev.localName : void 0) !== this.localName;
-    available = this.parentNode.offsetWidth - (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth);
-    if (isFirst || available <= fullWidth || (prev != null ? prev.size : void 0) !== 'base') {
-      col = 0;
-    }
-    if (col == null) {
-      col = (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth) / fullWidth;
-    }
-    left = col * fullWidth;
-    if (col !== 0) {
-      left -= this.fromStyle.marginLeft;
-    }
-    if (isFirst) {
-      top = 0;
-    }
-    if ((prev != null ? prev.size : void 0) !== 'base') {
-      if (top == null) {
-        top = this.offsetTop - this.fromStyle.marginTop;
-      }
-    }
-    if (top == null) {
-      top = ((available >= fullWidth ? prev.offsetTop : void 0) || this.offsetTop) - this.fromStyle.marginTop;
-    }
-    ghost.keyframeStack = [
-      {
-        transition: '0.6s all linear',
-        width: this.base.width,
-        height: this.base.height,
-        marginLeft: this.base.marginLeft,
-        marginTop: this.base.marginTop
-      }
-    ];
-    this.keyframeStack = [
-      {
-        transition: "0.7s all ease-in",
-        width: this.base.width,
-        height: this.base.height,
-        marginLeft: this.base.marginLeft,
-        top: top + "px",
-        left: left + "px"
-      }, {
-        transition: '',
-        left: "0px"
-      }
-    ];
-    ghost.keyframeTransition = this.keyframeTransition;
-    ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
-    ghost.keyframeTransition();
-    this.addEventListener('webkitTransitionEnd', this.keyframeTransition);
-    this.keyframeTransition();
-    return this.size = 'base';
-  },
-
-  /*
-   * Sequentially applies CSS transitions to an element.  Input may be an element or an instance of
-   * TransitionEvent referencing the element in its @target property
-  #
-   * Areas for improvement:
-   * - string case conversion should be moved to String.prototype or its own class
-   * - keyframe management should be its own class at the element level
-   */
-  keyframeTransition: function(event) {
-    var computedStyle, element, key, prop, ref, ref1, value, word;
-    if (event == null) {
-      event = null;
-    }
-    if ((ref = Object.prototype.toString.call(this)) === '[object HTMLElement]' || ref === '[object HTMLDivElement]') {
-      element = this;
-    }
-    if (element == null) {
-      element = (Object.prototype.toString.call(event) === "[object TransitionEvent]" ? event != null ? event.target : void 0 : void 0);
-    }
-    if (element == null) {
-      return console.log('Unable to find element', event, this);
-    }
-    if (!(element.keyframeStack instanceof Array)) {
-      return;
-    }
-    if (element.keyframeStack.length === 0) {
-      if (element.activeKeyframe != null) {
-        delete element.activeKeyframe;
-      }
-      element.dispatchEvent(new Event('matrixScaleEnd'));
-      element.removeEventListener('webkitTransitionEnd', element.keyframeTransition);
-      return;
-    }
-    if (element.activeKeyframe == null) {
-      element.activeKeyframe = {};
-    }
-    if (event != null) {
-      prop = ((function() {
-        var i, len, ref1, results;
-        ref1 = (event.propertyName || '').split('-');
-        results = [];
-        for (i = 0, len = ref1.length; i < len; i++) {
-          word = ref1[i];
-          results.push(word.substring(0, 1).toUpperCase() + (word.substring(1) || ''));
-        }
-        return results;
-      })()).join('');
-      prop = prop.charAt(0).toLowerCase() + prop.slice(1);
-      if (element.activeKeyframe[prop] != null) {
-        delete element.activeKeyframe[prop];
-      }
-    }
-    if (Object.keys(element.activeKeyframe).length !== 0) {
-      return;
-    }
-    element.activeKeyframe = element.keyframeStack.shift();
-    computedStyle = getComputedStyle(element);
-    ref1 = element.activeKeyframe;
-    for (key in ref1) {
-      value = ref1[key];
-      prop = key.replace(/([A-Z])/g, function(match) {
-        return '-' + match.toLowerCase();
-      });
-      element.style[key] = value;
-      if (element.style[key] === computedStyle[prop] || key === 'transition') {
-        delete element.activeKeyframe[key];
-      }
-    }
-    if (Object.keys(element.activeKeyframe).length === 0) {
-      return element.keyframeTransition();
-    }
-  },
-
-  /*
-   * insert the floated card back into the grid, replacing the ghost
-   */
-  stick: function() {
-    var ghost;
-    ghost = document.querySelector("#ghost-" + this.id);
-    this.typeCheck(ghost, ['HTMLElement', 'HTMLDivElement']);
-    this.mirrorStyle(ghost, this);
-    ghost.parentNode.replaceChild(this, ghost);
-    this.style.transition = '';
-    this.style.position = 'relative';
-    this.style.zIndex = 'auto';
-    this.style.top = '0px';
-    this.setShadowZ(this, 1);
-    return setTimeout((function(_this) {
-      return function() {
-        _this.dispatchEvent(new Event('matrixStickEnd'));
-        return _this.busy = false;
-      };
-    })(this), 0);
-  },
-
-  /*
-   * allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
-   */
-  unstick: function() {
-    var ghost, style;
-    this.busy = true;
-    this.setShadowZ(this, 5);
-    ghost = document.createElement('div');
-    ghost.id = "ghost-" + this.id;
-    ghost.className = 'matrix-ghost';
-    if (this.debug != null) {
-      ghost.style.background = "#999";
-    }
-    this.mirrorStyle(this, ghost);
-    style = getComputedStyle(this);
-    this.style.zIndex = 10;
-    this.style.top = (this.offsetTop - (parseInt(style.marginTop) || 0)) + "px";
-    this.style.left = (this.offsetLeft - (parseInt(style.marginLeft) || 0)) + "px";
-    this.style.position = 'absolute';
-    this.parentNode.insertBefore(ghost, this);
-    return setTimeout((function(_this) {
-      return function() {
-        return _this.dispatchEvent(new Event('matrixUnstickEnd'));
-      };
-    })(this), 0);
-  },
-
-  /*
-   * Attempts to apply Polymer z value to all elements in @element shadow DOM
-   */
-  setShadowZ: function(element, value, tagName) {
-    var i, item, len, ref, results;
-    if (tagName == null) {
-      tagName = 'paper-shadow';
-    }
-    if (!(parseInt(value) <= 5)) {
-      return;
-    }
-    if (!this.typeCheck(element, 'HTMLElement', false)) {
-      return;
-    }
-    if (element.shadowRoot == null) {
-      return;
-    }
-    ref = element.shadowRoot.querySelectorAll(tagName);
-    results = [];
-    for (i = 0, len = ref.length; i < len; i++) {
-      item = ref[i];
-      results.push(typeof item.setZ === "function" ? item.setZ(value) : void 0);
-    }
-    return results;
-  },
-
-  /*
-   * Applies all computed styles of @model to @target
-  #
-   * Optionally ignore blacklisted styles or only apply whitelisted styles
-   */
-  mirrorStyle: function(model, target, blacklist, whitelist) {
-    var modelStyle, prop, results, targetStyle, value;
-    if (blacklist == null) {
-      blacklist = null;
-    }
-    if (whitelist == null) {
-      whitelist = null;
-    }
-    this.typeCheck(model, ['HTMLElement', 'HTMLDivElement']);
-    this.typeCheck(target, ['HTMLElement', 'HTMLDivElement']);
-    modelStyle = getComputedStyle(model);
-    targetStyle = getComputedStyle(target);
-    if (blacklist == null) {
-      blacklist = ['background', 'transition', 'position'];
-    }
-    if (whitelist == null) {
-      whitelist = ['width', 'height', 'marginLeft', 'marginTop', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'];
-    }
-    results = [];
-    for (prop in modelStyle) {
-      value = modelStyle[prop];
-      if (!(typeof prop === 'string' && indexOf.call(blacklist, prop) < 0 && targetStyle[prop] !== value)) {
-        continue;
-      }
-      if (indexOf.call(whitelist, prop) >= 0) {
-        results.push(target.style[prop] = value);
-      } else {
-        results.push(void 0);
-      }
-    }
-    return results;
-  },
-
-  /*
-   * ensures @value is an instance of @type, optionally throwing an exception if not
-   */
-  typeCheck: function(value, types, throwError) {
-    var type, valueType;
-    if (throwError == null) {
-      throwError = true;
-    }
-    valueType = Object.prototype.toString.call(value);
-    if (typeof types !== 'string') {
-      types = [types];
-    }
-    if ((function() {
-      var i, len, results;
-      results = [];
-      for (i = 0, len = types.length; i < len; i++) {
-        type = types[i];
-        results.push(valueType.match(new RegExp("/" + type + "/")));
-      }
-      return results;
-    })()) {
-      return true;
-    }
-    if (throwError !== true) {
-      return false;
-    }
-    throw new TypeError("expected [object " + (types.join('/')) + "]; provided " + (Object.prototype.toString.call(value)));
-  },
-
-  /*
-   * returns the number of elements preceding @element in the current row
-   */
-  leftOffset: function(element) {
-    return this.rowOffset(element, 'previous');
-  },
-
-  /*
-   * returns the number of elements following @element in the current row
-   */
-  rightOffset: function(element) {
-    return this.rowOffset(element, 'next');
-  },
-
-  /*
-   * worker method for rightOffset and leftOffset
-   */
-  rowOffset: function(element, direction) {
-    var neighbor;
-    neighbor = element[direction + "ElementSibling"];
-    if (neighbor == null) {
-      return 0;
-    }
-    if (!(neighbor.localName === element.localName || neighbor.localName === 'matrix-card' || neighbor.className === 'matrix-ghost')) {
-      return 0;
-    }
-    if (neighbor.style.position === 'absolute') {
-      return this.rowOffset.apply(this, [neighbor, direction]);
-    }
-    if (neighbor.size === 'expanded') {
-      return 0;
-    }
-    if (element.offsetLeft <= neighbor.offsetLeft && direction === 'previous') {
-      return 0;
-    }
-    if (element.offsetLeft >= neighbor.offsetLeft && direction === 'next') {
-      return 0;
-    }
-    return this.rowOffset.apply(this, [neighbor, direction]) + 1;
   }
 });
 </script>
 </polymer-element>
-<polymer-element name="matrix-drawer" assetpath="matrix-drawer/">
+<polymer-element name="matrix-drawer" constructor="MatrixDrawer" assetpath="matrix-drawer/">
     <template>
         <style shim-shadowdom="">:host {
   display: block;
@@ -1881,34 +1471,85 @@ Polymer('matrix-card', {
 });
 </script>
 </polymer-element>
-<polymer-element name="matrix-scaffold" assetpath="matrix-scaffold/">
-    <template>
-        <style shim-shadowdom="">:host {
-  height: auto; }
+<polymer-element name="matrix-ghost" constructor="MatrixGhost" assetpath="matrix-ghost/">
+    <script>Polymer('matrix-ghost', {
+  ready: function() {},
+  publish: {
+    target: null,
+    debug: false
+  },
+  assign: function(element) {
+    var meta, styleUtils;
+    this.target = element;
+    meta = document.createElement('core-meta');
+    if (this.debug !== false) {
+      this.style.background = "#999";
+    }
+    styleUtils = meta.byId('matrix-style-utils');
+    return styleUtils.mirrorStyle(this.target, this);
+  },
 
-.container {
-  height: auto; }
+  /*
+   * allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
+   */
+  unstick: function() {
+    var elUtils, meta, style, styleUtils;
+    if (this.target == null) {
+      return;
+    }
+    meta = document.createElement('core-meta');
+    elUtils = meta.byId('matrix-element-utils');
+    elUtils.setShadowZ(this.target, 5);
+    styleUtils = meta.byId('matrix-style-utils');
+    this.target.beginState = styleUtils.copyByValue(this.target);
+    this.target.working = true;
+    style = getComputedStyle(this.target);
+    this.target.style.zIndex = 10;
+    this.target.style.top = (this.target.offsetTop - (parseInt(style.marginTop) || 0)) + "px";
+    this.target.style.left = (this.target.offsetLeft - (parseInt(style.marginLeft) || 0)) + "px";
+    this.target.style.position = 'absolute';
+    this.target.parentNode.insertBefore(this, this.target);
+    return setTimeout((function(_this) {
+      return function() {
+        return _this.target.dispatchEvent(new Event('matrixUnstickEnd'));
+      };
+    })(this), 0);
+  },
 
-.container > div {
-  height: 100%;
-  padding: 0px; }
-</style>
-        <div class="container" horizontal="" layout="" fit="">
-            <div class="sharp">
-                <content select="[application], .application"></content>
-            </div>
-            <div flex="" layout="" horizontal="" class="sheet">
-                <content select=":not(matrix-drawer)"></content>
-            </div>
-            <div>
-                <content select="matrix-drawer"></content>
-            </div>
-        </div>
-    </template>
-    <script>Polymer('matrix-scaffold', function() {});
+  /*
+   * insert the floated card back into the grid, replacing the ghost
+   */
+  stick: function() {
+    var elUtils, ghost, meta, styleUtils, target;
+    if (this.localName === 'matrix-card') {
+      target = this;
+    }
+    if (this.localName === 'matrix-ghost') {
+      target = this.target;
+    }
+    meta = document.createElement('core-meta');
+    elUtils = meta.byId('matrix-element-utils');
+    ghost = elUtils.findGhost(target);
+    styleUtils = meta.byId('matrix-style-utils');
+    styleUtils.mirrorStyle(ghost, target);
+    ghost.parentNode.replaceChild(target, ghost);
+    target.style.transition = '';
+    target.style.position = 'relative';
+    target.style.zIndex = 'auto';
+    target.style.top = '0px';
+    elUtils.setShadowZ(target, 1);
+    return setTimeout((function(_this) {
+      return function() {
+        target.dispatchEvent(new Event('matrixStickEnd'));
+        return target.working = false;
+      };
+    })(this), 0);
+  }
+});
 </script>
+    <template></template>
 </polymer-element>
-<polymer-element name="matrix-list" assetpath="matrix-list/">
+<polymer-element name="matrix-list" constructor="MatrixList" assetpath="matrix-list/">
     <template>
         <style shim-shadowdom="">:host {
   display: block;
@@ -1947,7 +1588,7 @@ Polymer('matrix-card', {
 });
 </script>
 </polymer-element>
-<polymer-element name="matrix-list-item" assetpath="matrix-list-item/">
+<polymer-element name="matrix-list-item" constructor="MatrixItem" assetpath="matrix-list-item/">
     <template>
         <style shim-shadowdom="">:host {
   display: block;
@@ -2008,4 +1649,581 @@ Polymer('matrix-card', {
   ready: function() {}
 });
 </script>
+</polymer-element>
+<polymer-element name="matrix-scaffold" constructor="MatrixScaffold" assetpath="matrix-scaffold/">
+    <template>
+        <style shim-shadowdom="">:host {
+  height: auto; }
+
+.container {
+  height: auto; }
+
+.container > div {
+  height: 100%;
+  padding: 0px; }
+</style>
+        <div class="container" horizontal="" layout="" fit="">
+            <div class="sharp">
+                <content select="[application], .application"></content>
+            </div>
+            <div flex="" layout="" horizontal="" class="sheet">
+                <content select=":not(matrix-drawer)"></content>
+            </div>
+            <div>
+                <content select="matrix-drawer"></content>
+            </div>
+        </div>
+    </template>
+    <script>Polymer('matrix-scaffold', function() {});
+</script>
+</polymer-element>
+<polymer-element name="matrix-shadow" constructor="MatrixShadow" assetpath="matrix-shadow/">
+    <script>Polymer('matrix-shadow', function() {
+  return {
+    publish: {
+      z: 1
+    },
+    setZ: function(value) {}
+  };
+});
+</script>
+    <template>
+        <style>
+            :host {
+                /*display: none;*/
+            }
+            /* Shadow styles adapted from Polymer paper-shadow */
+        </style>
+    </template>
+</polymer-element>
+<polymer-element name="matrix-square" attributes="side" constructor="MatrixSquare" assetpath="matrix-shapes/">
+    <script>
+        Polymer('matrix-square',
+        {
+            publish:
+            {
+                side: 100
+            },
+            ready: function()
+            {
+                var side;
+                side = parseInt(this.side);
+                if (isNaN(side))
+                {
+                    side = 100;
+                }
+                this.style.height = side + 'px';
+                this.style.width = side + 'px';
+            }
+        })
+    </script>
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+        <content></content>
+    </template>
+</polymer-element>
+<polymer-element name="matrix-toolbar" constructor="MatrixToolbar" assetpath="matrix-toolbar/">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+            
+            div {
+                box-sizing: border-box;
+            }
+            
+            .matrix-toolbar {
+                padding: 20px;
+            }
+            
+            ::content core-icon {
+                height: 24px;
+                width: 24px;
+                color: #999;
+            }
+        </style>
+        <div class="matrix-toolbar" layout="" horizontal="" center="">
+            <div>
+                <content select="core-icon, img"></content>
+            </div>
+            <div flex="">
+                <content></content>
+            </div>
+        </div>
+    </template>
+<script>Polymer('matrix-toolbar');</script></polymer-element>
+<polymer-element name="matrix-floating-transform" constructor="MatrixFloatingTransform" assetpath="matrix-transitions/">
+    <script>Polymer('matrix-floating-transform', {
+
+  /*
+   * Expands a card by keyframes.  Prior to calling this method, the card should be absolutely positioned above
+   * a ghost element
+   */
+  grow: function(event) {
+    var dims, elUtils, element, elementTop, ghost, gridUtils, marginComp, meta, styleUtils, toEdge, transformer;
+    element = event.target;
+    dims = (element != null ? element.fullSizeDims : void 0) || {};
+    meta = document.createElement('core-meta');
+    elUtils = meta.byId('matrix-element-utils');
+    ghost = elUtils.findGhost(element);
+    if (ghost == null) {
+      return;
+    }
+    styleUtils = meta.byId('matrix-style-utils');
+    element.fromStyle = styleUtils.copyByValue(element);
+    gridUtils = meta.byId('matrix-grid-utils');
+    toEdge = gridUtils.pixelsToEdge(ghost);
+    elementTop = gridUtils.nextAvailableTop(ghost);
+    marginComp = gridUtils.marginCompensation(ghost);
+    if (dims.width == null) {
+      dims.width = '100%';
+    }
+    if (dims.marginLeft == null) {
+      dims.marginLeft = '0px';
+    }
+    if (dims.height == null) {
+      dims.height = element.fromStyle.height;
+    }
+    ghost.keyframeStack = [
+      {
+        transition: 'all 0.3s linear',
+        marginLeft: '0px',
+        width: (toEdge + ghost.offsetWidth) + "px",
+        marginBottom: marginComp + "px"
+      }, {
+        width: "" + dims.width,
+        height: "" + dims.height,
+        marginBottom: '0px'
+      }
+    ];
+    element.keyframeStack = [
+      {
+        transition: 'all 0.7s ease-in',
+        left: '0px',
+        width: "" + dims.width,
+        marginLeft: "" + dims.marginLeft,
+        height: "" + dims.height,
+        top: elementTop + "px"
+      }, {}
+    ];
+    transformer = new MatrixFloatingTransform();
+    ghost.keyframeTransition = transformer.keyframeTransition;
+    element.keyframeTransition = transformer.keyframeTransition;
+    ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
+    ghost.keyframeTransition(ghost);
+    element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
+    element.keyframeTransition(element);
+    element.size = 'expanded';
+  },
+
+  /*
+   * Returns an element to its base size
+   */
+  shrink: function(event) {
+    var available, col, elUtils, element, fullWidth, ghost, isFirst, left, meta, prev, ref, top, transformer;
+    element = event.target;
+    meta = document.createElement('core-meta');
+    elUtils = meta.byId('matrix-element-utils');
+    ghost = elUtils.findGhost(element);
+    if (ghost == null) {
+      return;
+    }
+    if (((ref = ghost.previousElementSibling) != null ? ref.localName : void 0) === element.localName) {
+      prev = ghost.previousElementSibling;
+    }
+    fullWidth = (parseFloat(element.fromStyle.width) || 0) + (parseFloat(element.fromStyle.marginLeft) || 0);
+    isFirst = (prev != null ? prev.localName : void 0) !== element.localName;
+    available = element.parentNode.offsetWidth - (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth);
+    if (isFirst || available <= fullWidth || (prev != null ? prev.size : void 0) !== 'base') {
+      col = 0;
+    }
+    if (col == null) {
+      col = (((prev != null ? prev.offsetLeft : void 0) || 0) + fullWidth) / fullWidth;
+    }
+    left = col * fullWidth;
+    if (col !== 0) {
+      left -= parseFloat(element.fromStyle.marginLeft) || 0;
+    }
+    if (isFirst) {
+      top = 0;
+    }
+    if ((prev != null ? prev.size : void 0) !== 'base') {
+      if (top == null) {
+        top = element.offsetTop - (parseFloat(element.fromStyle.marginTop) || 0);
+      }
+    }
+    if (top == null) {
+      top = ((available >= fullWidth ? prev.offsetTop : void 0) || element.offsetTop) - (parseFloat(element.fromStyle.marginTop) || 0);
+    }
+    ghost.keyframeStack = [
+      {
+        transition: '0.6s all linear',
+        width: element.fromStyle.width,
+        height: element.fromStyle.height,
+        marginLeft: element.fromStyle.marginLeft,
+        marginTop: element.fromStyle.marginTop
+      }
+    ];
+    element.keyframeStack = [
+      {
+        transition: "0.7s all ease-in",
+        width: element.fromStyle.width,
+        height: element.fromStyle.height,
+        marginLeft: element.fromStyle.marginLeft,
+        top: top + "px",
+        left: left + "px"
+      }, {
+        transition: '',
+        left: "0px"
+      }
+    ];
+    transformer = new MatrixFloatingTransform();
+    ghost.keyframeTransition = transformer.keyframeTransition;
+    element.keyframeTransition = transformer.keyframeTransition;
+    ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
+    ghost.keyframeTransition(ghost);
+    element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
+    element.keyframeTransition(element);
+    return element.size = 'base';
+  },
+
+  /*
+   * Sequentially applies CSS transitions to an element.  Input may be an element or an instance of
+   * TransitionEvent referencing the element in its @target property
+  #
+   * Areas for improvement:
+   * - string case conversion should be moved to String.prototype or its own class
+   * - keyframe management should be its own class at the element level
+   */
+  keyframeTransition: function(event) {
+    var computedStyle, element, key, meta, prop, ref, ref1, stringUtils, value, word;
+    if (event == null) {
+      event = null;
+    }
+    if ((ref = Object.prototype.toString.call(event)) === '[object HTMLElement]' || ref === '[object HTMLDivElement]') {
+      element = event;
+    }
+    if (element == null) {
+      element = (Object.prototype.toString.call(event) === "[object TransitionEvent]" ? event != null ? event.target : void 0 : void 0);
+    }
+    if (element == null) {
+      return console.log('Unable to find element', event);
+    }
+    if (!(element.keyframeStack instanceof Array)) {
+      return;
+    }
+    if (element.keyframeStack.length === 0) {
+      if (element.activeKeyframe != null) {
+        delete element.activeKeyframe;
+      }
+      element.dispatchEvent(new Event('matrixScaleEnd'));
+      element.removeEventListener('webkitTransitionEnd', element.keyframeTransition);
+      return;
+    }
+    if (element.activeKeyframe == null) {
+      element.activeKeyframe = {};
+    }
+    if (event !== element) {
+      prop = ((function() {
+        var i, len, ref1, results;
+        ref1 = (event.propertyName || '').split('-');
+        results = [];
+        for (i = 0, len = ref1.length; i < len; i++) {
+          word = ref1[i];
+          results.push(word.substring(0, 1).toUpperCase() + (word.substring(1) || ''));
+        }
+        return results;
+      })()).join('');
+      prop = prop.charAt(0).toLowerCase() + prop.slice(1);
+      if (element.activeKeyframe[prop] != null) {
+        delete element.activeKeyframe[prop];
+      }
+    }
+    if (Object.keys(element.activeKeyframe).length !== 0) {
+      return;
+    }
+    element.activeKeyframe = element.keyframeStack.shift();
+    computedStyle = getComputedStyle(element);
+    meta = document.createElement('core-meta');
+    stringUtils = meta.byId('matrix-string-utils');
+    ref1 = element.activeKeyframe;
+    for (key in ref1) {
+      value = ref1[key];
+      element.style[key] = value;
+      prop = stringUtils.hyphenToCamel(key);
+      if (element.style[key] === computedStyle[prop] || key === 'transition') {
+        delete element.activeKeyframe[key];
+      }
+      if (key === 'width' && parseInt(computedStyle[prop]) === element.parentNode.offsetWidth) {
+        delete element.activeKeyframe[key];
+      }
+    }
+    if (Object.keys(element.activeKeyframe).length === 0) {
+      return this.keyframeTransition(element);
+    }
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<polymer-element name="matrix-element-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    elUtils = meta.byId('matrix-element-utils')
+ */
+Polymer('matrix-element-utilities', {
+
+  /*
+   * Locate a ghost attached to `element`
+   */
+  findGhost: function(element) {
+    var ghost, ghosts, i, len;
+    ghosts = document.querySelectorAll('matrix-ghost');
+    for (i = 0, len = ghosts.length; i < len; i++) {
+      ghost = ghosts[i];
+      if (ghost.target === element) {
+        return ghost;
+      }
+    }
+    return null;
+  },
+  injectGhost: function(element) {
+    var ghost;
+    ghost = document.createElement('matrix-ghost');
+    return ghost.assign(element);
+  },
+
+  /*
+   * Attempts to apply Polymer z value to all elements in @element shadow DOM
+   */
+  setShadowZ: function(element, value, tagName) {
+    var target;
+    if (tagName == null) {
+      tagName = 'paper-shadow';
+    }
+    if (!(parseInt(value) <= 5)) {
+      return;
+    }
+    if (element.shadowRoot == null) {
+      return;
+    }
+    target = element.shadowRoot.querySelector(tagName);
+    return target != null ? typeof target.setZ === "function" ? target.setZ(value) : void 0 : void 0;
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<polymer-element name="matrix-grid-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    gridUtils = meta.byId('matrix-grid-utils')
+ */
+Polymer('matrix-grid-utilities', {
+  pixelsToEdge: function(element) {
+    var elementStyle, gridStyle, pixelsToEdge, usefulWidth, widthThroughElement;
+    gridStyle = getComputedStyle(element.parentNode);
+    elementStyle = getComputedStyle(element);
+    usefulWidth = parseFloat(gridStyle.width) - (parseFloat(gridStyle.paddingLeft) || 0) - (parseFloat(gridStyle.paddingRight) || 0);
+    widthThroughElement = element.offsetLeft + element.offsetWidth + (parseFloat(elementStyle.marginLeft) || 0);
+    pixelsToEdge = usefulWidth - widthThroughElement;
+    return pixelsToEdge;
+  },
+  nextAvailableTop: function(element) {
+    var elementStyle, marginTop, offsetHeight, offsetTop;
+    elementStyle = getComputedStyle(element);
+    offsetTop = parseFloat(element.offsetTop) || 0;
+    offsetHeight = parseFloat(element.offsetHeight) || 0;
+    marginTop = parseFloat(elementStyle.marginTop) || 0;
+    if (this.leftOffset(element) === 0) {
+      return offsetTop - marginTop;
+    }
+    return offsetTop + offsetHeight;
+  },
+  marginCompensation: function(element) {
+    var items, remainder;
+    items = this.leftOffset(element) + this.rightOffset(element);
+    remainder = (!(this.leftOffset(element) === 0 || items === 0) ? this.leftOffset(element) / items : void 0) || 0;
+    return remainder * parseFloat(element.offsetHeight);
+  },
+
+  /*
+   * worker method for rightOffset and leftOffset
+   */
+  rowOffset: function(element, direction) {
+    var neighbor;
+    neighbor = element[direction + "ElementSibling"];
+    if (neighbor == null) {
+      return 0;
+    }
+    if (!(neighbor.localName === element.localName || neighbor.localName === 'matrix-card' || neighbor.className === 'matrix-ghost')) {
+      return 0;
+    }
+    if (neighbor.style.position === 'absolute') {
+      return this.rowOffset.apply(this, [neighbor, direction]);
+    }
+    if (neighbor.size === 'expanded') {
+      return 0;
+    }
+    if (element.offsetLeft <= neighbor.offsetLeft && direction === 'previous') {
+      return 0;
+    }
+    if (element.offsetLeft >= neighbor.offsetLeft && direction === 'next') {
+      return 0;
+    }
+    return this.rowOffset.apply(this, [neighbor, direction]) + 1;
+  },
+
+  /*
+   * returns the number of elements preceding @element in the current row
+   */
+  leftOffset: function(element) {
+    return this.rowOffset(element, 'previous');
+  },
+
+  /*
+   * returns the number of elements following @element in the current row
+   */
+  rightOffset: function(element) {
+    return this.rowOffset(element, 'next');
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<polymer-element name="matrix-string-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    stringUtils = meta.byId('matrix-string-utils')
+ */
+Polymer('matrix-string-utilities', {
+  hyphenToCamel: function(string) {
+    return string.replace(/([A-Z])/g, function(match) {
+      return '-' + match.toLowerCase();
+    });
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<polymer-element name="matrix-style-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    styleUtils = meta.byId('matrix-style-utils')
+ */
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+Polymer('matrix-style-utilities', {
+
+  /*
+   * Applies all computed styles of @model to @target
+  #
+   * Optionally ignore blacklisted styles or only apply whitelisted styles
+   */
+  mirrorStyle: function(model, target, blacklist, whitelist) {
+    var modelStyle, prop, results, targetStyle, typeUtils, value;
+    if (blacklist == null) {
+      blacklist = null;
+    }
+    if (whitelist == null) {
+      whitelist = null;
+    }
+    typeUtils = new MatrixTypeUtilities();
+    typeUtils.typeCheck(model, ['HTMLElement', 'HTMLDivElement']);
+    typeUtils.typeCheck(target, ['HTMLElement', 'HTMLDivElement']);
+    modelStyle = getComputedStyle(model);
+    targetStyle = getComputedStyle(target);
+    if (blacklist == null) {
+      blacklist = ['background', 'transition', 'position'];
+    }
+    if (whitelist == null) {
+      whitelist = ['width', 'height', 'marginLeft', 'marginTop', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'];
+    }
+    results = [];
+    for (prop in modelStyle) {
+      value = modelStyle[prop];
+      if (!(typeof prop === 'string' && indexOf.call(blacklist, prop) < 0 && targetStyle[prop] !== value)) {
+        continue;
+      }
+      if (indexOf.call(whitelist, prop) >= 0) {
+        results.push(target.style[prop] = value);
+      } else {
+        results.push(void 0);
+      }
+    }
+    return results;
+  },
+  copyByValue: function(element) {
+    var cs, key, result, value;
+    cs = getComputedStyle(element);
+    if (cs == null) {
+      return null;
+    }
+    result = {};
+    for (key in cs) {
+      value = cs[key];
+      result[key] = value;
+    }
+    return result;
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<polymer-element name="matrix-type-utilities" constructor="MatrixTypeUtilities" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    typeUtils = meta.byId('matrix-type-utils')
+ */
+Polymer('matrix-type-utilities', {
+  ready: function() {},
+
+  /*
+   * ensures @value is an instance of @type, optionally throwing an exception if not
+   */
+  typeCheck: function(value, types, throwError) {
+    var type, valueType;
+    if (throwError == null) {
+      throwError = true;
+    }
+    valueType = Object.prototype.toString.call(value);
+    if (typeof types !== 'string') {
+      types = [types];
+    }
+    if ((function() {
+      var i, len, results;
+      results = [];
+      for (i = 0, len = types.length; i < len; i++) {
+        type = types[i];
+        results.push(valueType.match(new RegExp("/" + type + "/")));
+      }
+      return results;
+    })()) {
+      return true;
+    }
+    if (throwError !== true) {
+      return false;
+    }
+    throw new TypeError("expected [object " + (types.join('/')) + "]; provided " + (Object.prototype.toString.call(value)));
+  }
+});
+</script>
+    <template></template>
 </polymer-element></div></body></html>

@@ -67,8 +67,8 @@ gulp.task 'build', ->
   gulp.src path.resolve("#{config.bower}/polymer/**/*")
   .pipe gulp.dest path.resolve("#{config.build}/elements/polymer")
 
-  gulp.src path.resolve("#{config.src}/elements/matrix-dependencies.html")
-  .pipe gulp.dest path.resolve("#{config.build}/elements")
+#  gulp.src path.resolve("#{config.src}/elements/matrix-dependencies.html")
+#  .pipe gulp.dest path.resolve("#{config.build}/elements")
 
   gulp.src path.resolve("#{config.node}/jquery/dist/jquery.js")
   .pipe gulp.dest path.resolve("#{config.build}/scripts")
