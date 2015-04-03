@@ -7,21 +7,21 @@
     @@stylesheet-main
 </head>
 <body unresolved fullbleed>
-<matrix-element-utilities id="matrix-element-utils"></matrix-element-utilities>
-<matrix-grid-utilities id="matrix-grid-utils"></matrix-grid-utilities>
-<matrix-string-utilities id="matrix-string-utils"></matrix-string-utilities>
-<matrix-style-utilities id="matrix-style-utils"></matrix-style-utilities>
-<matrix-type-utilities id="matrix-type-utils"></matrix-type-utilities>
 
-<template is="auto-binding">
+
+
+
+
 <matrix-scaffold>
     <matrix-drawer modal application></matrix-drawer>
     <div relative flex layout horizontal wrap class="scroll">
-        <template repeat="{{item in activeCollection}}">
-            <matrix-card class="card" id="card{{item.value}}" fullSizeDims="{{item.dims}}">
-                <core-icon icon="{{item.icon}}"></core-icon>
-                <h2>{{item.value}}</h2>
-            </matrix-card>
+        <template is="auto-binding">
+            <template repeat="{{item in activeCollection}}">
+                <matrix-card class="card" id="card{{item.value}}" fullSizeDims="{{item.dims}}">
+                    <core-icon icon="{{item.icon}}"></core-icon>
+                    <h2>{{item.value}}</h2>
+                </matrix-card>
+            </template>
         </template>
     </div>
     <matrix-drawer right>
@@ -55,7 +55,12 @@
         </matrix-card>
     </matrix-drawer>
 </matrix-scaffold>
-</template>
+
+<matrix-sheet-controller></matrix-sheet-controller>
+<matrix-sheet size="33" offset="0"></matrix-sheet>
+<matrix-sheet size="33" offset="25%"></matrix-sheet>
+<matrix-sheet size="33" offset="50%"></matrix-sheet>
+
 @@scripts-low
 </body>
 </html>

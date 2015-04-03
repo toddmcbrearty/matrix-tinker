@@ -34,7 +34,8 @@ Polymer 'matrix-floating-transform',
 
     ghost.keyframeStack = [
       {transition: 'all 0.3s linear', marginLeft: '0px', width: "#{toEdge + ghost.offsetWidth}px", marginBottom: "#{marginComp}px"}
-      {width: "#{dims.width}", height: "#{dims.height}", marginBottom: '0px'},
+      {transition: '', width: '100%', marginBottom: '0px'}
+      {transition: 'all 0.3s linear', height: "#{dims.height}"},
     ]
 
     element.keyframeStack = [
@@ -46,7 +47,7 @@ Polymer 'matrix-floating-transform',
         height: "#{dims.height}",
         top: "#{elementTop}px"
       }
-      {}
+      {} # The ghost isn't having enough time to complete its transition...
     ]
 
     transformer = new MatrixFloatingTransform()

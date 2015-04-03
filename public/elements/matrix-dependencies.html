@@ -1,5 +1,8 @@
 <html><head>
 
+
+
+
 <style shim-shadowdom="">/*
  * @license
  * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -75,8 +78,6 @@ html /deep/ .paper-shadow-bottom-z-5 {
 
 
 
-
-
 <style shim-shadowdom="">/* Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -115,7 +116,95 @@ html /deep/ core-icon {
 
 
 
-</head><body><div hidden=""><polymer-element name="paper-shadow" assetpath="../../vendor/bower_components/paper-shadow/">
+
+</head><body><div hidden=""><polymer-element name="core-meta" attributes="label type" hidden="" assetpath="../../vendor/bower_components/core-meta/">
+<script>
+
+  (function() {
+    
+    var SKIP_ID = 'meta';
+    var metaData = {}, metaArray = {};
+
+    Polymer('core-meta', {
+      
+      /**
+       * The type of meta-data.  All meta-data with the same type with be
+       * stored together.
+       * 
+       * @attribute type
+       * @type string
+       * @default 'default'
+       */
+      type: 'default',
+      
+      alwaysPrepare: true,
+      
+      ready: function() {
+        this.register(this.id);
+      },
+      
+      get metaArray() {
+        var t = this.type;
+        if (!metaArray[t]) {
+          metaArray[t] = [];
+        }
+        return metaArray[t];
+      },
+      
+      get metaData() {
+        var t = this.type;
+        if (!metaData[t]) {
+          metaData[t] = {};
+        }
+        return metaData[t];
+      },
+      
+      register: function(id, old) {
+        if (id && id !== SKIP_ID) {
+          this.unregister(this, old);
+          this.metaData[id] = this;
+          this.metaArray.push(this);
+        }
+      },
+      
+      unregister: function(meta, id) {
+        delete this.metaData[id || meta.id];
+        var i = this.metaArray.indexOf(meta);
+        if (i >= 0) {
+          this.metaArray.splice(i, 1);
+        }
+      },
+      
+      /**
+       * Returns a list of all meta-data elements with the same type.
+       * 
+       * @property list
+       * @type array
+       * @default []
+       */
+      get list() {
+        return this.metaArray;
+      },
+      
+      /**
+       * Retrieves meta-data by ID.
+       *
+       * @method byId
+       * @param {String} id The ID of the meta-data to be returned.
+       * @returns Returns meta-data.
+       */
+      byId: function(id) {
+        return this.metaData[id];
+      }
+      
+    });
+    
+  })();
+  
+</script>
+</polymer-element>
+
+<polymer-element name="paper-shadow" assetpath="../../vendor/bower_components/paper-shadow/">
 
 <template>
 
@@ -581,92 +670,6 @@ html /deep/ core-icon {
 </script>
 </polymer-element>
 
-<polymer-element name="core-meta" attributes="label type" hidden="" assetpath="../../vendor/bower_components/core-meta/">
-<script>
-
-  (function() {
-    
-    var SKIP_ID = 'meta';
-    var metaData = {}, metaArray = {};
-
-    Polymer('core-meta', {
-      
-      /**
-       * The type of meta-data.  All meta-data with the same type with be
-       * stored together.
-       * 
-       * @attribute type
-       * @type string
-       * @default 'default'
-       */
-      type: 'default',
-      
-      alwaysPrepare: true,
-      
-      ready: function() {
-        this.register(this.id);
-      },
-      
-      get metaArray() {
-        var t = this.type;
-        if (!metaArray[t]) {
-          metaArray[t] = [];
-        }
-        return metaArray[t];
-      },
-      
-      get metaData() {
-        var t = this.type;
-        if (!metaData[t]) {
-          metaData[t] = {};
-        }
-        return metaData[t];
-      },
-      
-      register: function(id, old) {
-        if (id && id !== SKIP_ID) {
-          this.unregister(this, old);
-          this.metaData[id] = this;
-          this.metaArray.push(this);
-        }
-      },
-      
-      unregister: function(meta, id) {
-        delete this.metaData[id || meta.id];
-        var i = this.metaArray.indexOf(meta);
-        if (i >= 0) {
-          this.metaArray.splice(i, 1);
-        }
-      },
-      
-      /**
-       * Returns a list of all meta-data elements with the same type.
-       * 
-       * @property list
-       * @type array
-       * @default []
-       */
-      get list() {
-        return this.metaArray;
-      },
-      
-      /**
-       * Retrieves meta-data by ID.
-       *
-       * @method byId
-       * @param {String} id The ID of the meta-data to be returned.
-       * @returns Returns meta-data.
-       */
-      byId: function(id) {
-        return this.metaData[id];
-      }
-      
-    });
-    
-  })();
-  
-</script>
-</polymer-element>
 <polymer-element name="core-iconset" extends="core-meta" attributes="src width icons iconSize" assetpath="../../vendor/bower_components/core-iconset/">
   
   <script>
@@ -1349,16 +1352,20 @@ html /deep/ core-icon {
 <g id="work"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"></path></g>
 </defs></svg>
 </core-iconset-svg>
+
 <polymer-element name="matrix-card" constructor="MatrixCard" attributes="data" on-click="{{handleClick}}" assetpath="matrix-card/">
     <template>
         <style shim-shadowdom="">:host {
   display: block;
-  position: relative;
   box-sizing: border-box;
   background: white; }
 
 :host([naked]) matrix-toolbar {
   display: none !important; }
+
+:host([fullsize]) {
+  height: 100%;
+  width: 100%; }
 
 :host([no-ripple]) paper-ripple {
   display: none !important; }
@@ -1798,9 +1805,12 @@ paper-shadow {
         width: (toEdge + ghost.offsetWidth) + "px",
         marginBottom: marginComp + "px"
       }, {
-        width: "" + dims.width,
-        height: "" + dims.height,
+        transition: '',
+        width: '100%',
         marginBottom: '0px'
+      }, {
+        transition: 'all 0.3s linear',
+        height: "" + dims.height
       }
     ];
     element.keyframeStack = [
@@ -2023,6 +2033,7 @@ Polymer('matrix-element-utilities', {
 </script>
     <template></template>
 </polymer-element>
+<matrix-element-utilities id="matrix-element-utils"></matrix-element-utilities>
 <polymer-element name="matrix-grid-utilities" extends="core-meta" assetpath="matrix-utilities/">
     <script>
 /*
@@ -2054,7 +2065,7 @@ Polymer('matrix-grid-utilities', {
   marginCompensation: function(element) {
     var items, remainder;
     items = this.leftOffset(element) + this.rightOffset(element);
-    remainder = (!(this.leftOffset(element) === 0 || items === 0) ? this.leftOffset(element) / items : void 0) || 0;
+    remainder = (!(this.leftOffset(element) === 0 || this.rightOffset(element) === 0) ? this.rightOffset(element) / items : void 0) || 0;
     return remainder * parseFloat(element.offsetHeight);
   },
 
@@ -2102,6 +2113,7 @@ Polymer('matrix-grid-utilities', {
 </script>
     <template></template>
 </polymer-element>
+<matrix-grid-utilities id="matrix-grid-utils"></matrix-grid-utilities>
 <polymer-element name="matrix-string-utilities" extends="core-meta" assetpath="matrix-utilities/">
     <script>
 /*
@@ -2119,6 +2131,7 @@ Polymer('matrix-string-utilities', {
 </script>
     <template></template>
 </polymer-element>
+<matrix-string-utilities id="matrix-string-utils"></matrix-string-utilities>
 <polymer-element name="matrix-style-utilities" extends="core-meta" assetpath="matrix-utilities/">
     <script>
 /*
@@ -2185,6 +2198,7 @@ Polymer('matrix-style-utilities', {
 </script>
     <template></template>
 </polymer-element>
+<matrix-style-utilities id="matrix-style-utils"></matrix-style-utilities>
 <polymer-element name="matrix-type-utilities" constructor="MatrixTypeUtilities" assetpath="matrix-utilities/">
     <script>
 /*
@@ -2222,6 +2236,112 @@ Polymer('matrix-type-utilities', {
       return false;
     }
     throw new TypeError("expected [object " + (types.join('/')) + "]; provided " + (Object.prototype.toString.call(value)));
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<matrix-type-utilities id="matrix-type-utils"></matrix-type-utilities>
+<polymer-element name="matrix-sheet" constructor="MatrixSheet" assetpath="matrix-sheet/">
+    <template>
+        <style>:host {
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  transition: left 0.4s ease-out, right 0.4s ease-out; }
+</style>
+        <matrix-card class="sheet" fullsize="" naked="">
+            <content></content>
+        </matrix-card>
+    </template>
+    <script>Polymer('matrix-sheet', {
+  publish: {
+    size: 100,
+    sequence: null,
+    origin: 'left',
+    offset: '0'
+  },
+  ready: function() {
+    this.style.width = (parseInt(this.size) || 0) + "%";
+    if (this.offset.substr(this.offset.length - 1) === '%') {
+      this.offset = parseInt(window.innerWidth) * (parseFloat(this.offset) / 100);
+    }
+    return this.style[this.origin] = this.offset + "px";
+  }
+});
+</script>
+</polymer-element>
+<polymer-element name="matrix-sheet-controller" assetpath="matrix-sheet/">
+    <script>Polymer('matrix-sheet-controller', {
+  publish: {
+    group: null,
+    minZ: 100,
+    reverse: true
+  },
+  ready: function() {
+    var attribute, group, i, index, item, j, k, len, len1, len2, ref, results, scope, selector, sequence, sequenced, set, unsequenced;
+    attribute = (this.group != null ? "[group=" + group + "]" : void 0) || '';
+    selector = "matrix-sheet" + attribute;
+    scope = this.parentNode || document;
+    group = scope.querySelectorAll(selector);
+    if (!(group.length > 0)) {
+      return;
+    }
+    for (i = 0, len = group.length; i < len; i++) {
+      item = group[i];
+      if (item.sequence != null) {
+        sequenced = item;
+      }
+    }
+    if (sequenced == null) {
+      sequenced = [];
+    }
+    set = {
+      items: {},
+      keys: []
+    };
+    for (j = 0, len1 = sequenced.length; j < len1; j++) {
+      item = sequenced[j];
+      sequence = (parseInt(item.sequence) || 0) * 10 + this.minZ;
+      while (set.items[sequence++] != null) {
+        continue;
+      }
+      set.items[sequence] = item;
+      set.keys.push(sequence);
+    }
+    sequence = (set.keys.length !== 0 ? Math.max.apply(this, set.keys) : void 0) || this.minZ;
+    unsequenced = (function() {
+      var k, len2, results;
+      results = [];
+      for (k = 0, len2 = group.length; k < len2; k++) {
+        item = group[k];
+        if ((item.sequence != null) === false) {
+          results.push(item);
+        }
+      }
+      return results;
+    })();
+    console.log(unsequenced);
+    if (unsequenced == null) {
+      unsequenced = [];
+    }
+    if (this.reverse !== false) {
+      unsequenced = unsequenced.reverse();
+    }
+    for (k = 0, len2 = unsequenced.length; k < len2; k++) {
+      item = unsequenced[k];
+      set.items[++sequence] = item;
+    }
+    console.log(set);
+    ref = set.items;
+    results = [];
+    for (index in ref) {
+      item = ref[index];
+      results.push(item.style.zIndex = index);
+    }
+    return results;
   }
 });
 </script>

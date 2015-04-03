@@ -36,9 +36,12 @@ Polymer('matrix-floating-transform', {
         width: (toEdge + ghost.offsetWidth) + "px",
         marginBottom: marginComp + "px"
       }, {
-        width: "" + dims.width,
-        height: "" + dims.height,
+        transition: '',
+        width: '100%',
         marginBottom: '0px'
+      }, {
+        transition: 'all 0.3s linear',
+        height: "" + dims.height
       }
     ];
     element.keyframeStack = [

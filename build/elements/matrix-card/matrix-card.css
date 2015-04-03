@@ -1,11 +1,14 @@
 :host {
   display: block;
-  position: relative;
   box-sizing: border-box;
   background: white; }
 
 :host([naked]) matrix-toolbar {
   display: none !important; }
+
+:host([fullsize]) {
+  height: 100%;
+  width: 100%; }
 
 :host([no-ripple]) paper-ripple {
   display: none !important; }

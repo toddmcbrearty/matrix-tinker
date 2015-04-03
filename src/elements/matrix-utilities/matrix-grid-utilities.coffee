@@ -24,7 +24,7 @@ Polymer 'matrix-grid-utilities',
 
   marginCompensation: (element) ->
     items = @leftOffset(element) + @rightOffset(element)
-    remainder = (@leftOffset(element) / items unless @leftOffset(element) is 0 or items is 0) or 0
+    remainder = (@rightOffset(element) / items unless @leftOffset(element) is 0 or @rightOffset(element) is 0) or 0
     return remainder * parseFloat(element.offsetHeight)
 
   ###

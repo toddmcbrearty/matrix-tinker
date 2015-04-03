@@ -28,7 +28,7 @@ Polymer('matrix-grid-utilities', {
   marginCompensation: function(element) {
     var items, remainder;
     items = this.leftOffset(element) + this.rightOffset(element);
-    remainder = (!(this.leftOffset(element) === 0 || items === 0) ? this.leftOffset(element) / items : void 0) || 0;
+    remainder = (!(this.leftOffset(element) === 0 || this.rightOffset(element) === 0) ? this.rightOffset(element) / items : void 0) || 0;
     return remainder * parseFloat(element.offsetHeight);
   },
 
