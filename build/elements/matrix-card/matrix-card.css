@@ -1,7 +1,7 @@
 :host {
   display: block;
-  box-sizing: border-box;
-  background: white; }
+    box-sizing: border-box;
+}
 
 :host([naked]) matrix-toolbar {
   display: none !important; }

@@ -1,10 +1,14 @@
 Polymer('matrix-card', {
-  ready: function() {},
+    ready: function () {
+        return this.style.background = this.background;
+    },
   publish: {
     transformable: true,
     fullSizeDims: {},
     size: 'base',
-    debug: null
+      debug     : null,
+      background: 'white',
+      z         : 1
   },
   handleClick: function(event) {
     var ghost, meta, transformer;

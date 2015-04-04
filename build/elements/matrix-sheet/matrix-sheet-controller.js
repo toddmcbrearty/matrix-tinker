@@ -43,14 +43,13 @@ Polymer('matrix-sheet-controller', {
                 item = group[k];
                 if ((item.sequence != null) === false) {
                     results.push(item);
-                }
+        }
             }
             return results;
         })();
-        console.log(unsequenced);
         if (unsequenced == null) {
             unsequenced = [];
-        }
+    }
         if (this.reverse !== false) {
             unsequenced = unsequenced.reverse();
         }
@@ -58,7 +57,6 @@ Polymer('matrix-sheet-controller', {
             item = unsequenced[k];
             set.items[++sequence] = item;
         }
-        console.log(set);
         ref = set.items;
         results = [];
         for (index in ref) {

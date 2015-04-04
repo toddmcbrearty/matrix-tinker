@@ -1,11 +1,13 @@
-<polymer-element name="matrix-list" constructor="MatrixList">
+<polymer-element name="matrix-list" constructor="MatrixList" attributes="items, listTitle">
     <template>
         <link href="matrix-list.css" rel="stylesheet" shim-shadowdom>
         <div vertical layout class="matrix-list-layout">
-            <div>
-                <content select=".list-title"></content>
-            </div>
-            <content select="matrix-list-item"></content>
+            <template bind if="{{listTitle}}">
+                <div class="list-title">{{listTitle}}</div>
+            </template>
+            <template repeat="{{item in items}}">
+                <matrix-list-item data="{{item}}"></matrix-list-item>
+            </template>
         </div>
     </template>
     <script src="matrix-list.js"></script>

@@ -1,18 +1,18 @@
-<polymer-element name="matrix-list-item" constructor="MatrixItem">
+<polymer-element name="matrix-list-item" constructor="MatrixItem" attributes="data">
     <template>
         <link href="matrix-list-item.css" rel="stylesheet" shim-shadowdom>
         <div class="matrix-list-item" horizontal layout>
             <div class="list-item-icon" horizontal layout center center-justified>
-                <div>
-                    <content select="core-icon, img"></content>
-                </div>
+                <template bind if="{{data.icon}}">
+                    <core-icon icon="{{data.icon}}"></core-icon>
+                </template>
             </div>
-            <div class="list-item-content" vertical layout>
-                <div class="list-item-title">
-                    <content select=".item-title"></content>
-                </div>
-                <div flex class="list-item-body">
-                    <content></content>
+            <div horizontal layout center>
+                <div>
+                    <template if="{{data.title}}">
+                        <div class="list-item-title">{{data.title}}</div>
+                    </template>
+                    <div flex class="list-item-body">{{data.body}}</div>
                 </div>
             </div>
         </div>

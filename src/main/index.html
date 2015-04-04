@@ -10,8 +10,6 @@
 
 
 
-
-
 <matrix-scaffold>
     <matrix-drawer modal application></matrix-drawer>
     <div relative flex layout horizontal wrap class="scroll">
@@ -26,40 +24,19 @@
     </div>
     <matrix-drawer right>
         <matrix-card id="properties-general" size="expanded" transformable="false" naked>
-            <matrix-list>
-                <span class="list-title">General</span>
-                <matrix-list-item>
-                    <span class="item-title">Document Name</span>
-                    <span>Foo bar baz fizz: what do we really know?</span>
-                </matrix-list-item>
-                <matrix-list-item>
-                    <span class="item-title">Author</span>
-                    <span>Foobarius Fizz, Esq.</span>
-                </matrix-list-item>
-                <matrix-list-item>
-                    <span class="item-title">Type</span>
-                    <span>Contract</span>
-                </matrix-list-item>
-                <matrix-list-item>
-                    <core-icon icon="warning"></core-icon>
-                    <span class="item-title">Effective Date</span>
-                    <span>UNKNOWN</span>
-                </matrix-list-item>
-                <matrix-list-item extended>
-                    <span class="item-title">Notes</span>
-                    <span>
-                        This is not a note.
-                    </span>
-                </matrix-list-item>
-            </matrix-list>
+            <template is="auto-binding" id="test-bound-list">
+                <matrix-list items="{{items}}">
+                    <span class="title">List of Justice</span>
+                </matrix-list>
+            </template>
         </matrix-card>
     </matrix-drawer>
 </matrix-scaffold>
 
-<matrix-sheet-controller></matrix-sheet-controller>
-<matrix-sheet size="33" offset="0"></matrix-sheet>
-<matrix-sheet size="33" offset="25%"></matrix-sheet>
-<matrix-sheet size="33" offset="50%"></matrix-sheet>
+<!--<matrix-sheet-controller></matrix-sheet-controller>-->
+<!--<matrix-sheet size="33" offset="0"></matrix-sheet>-->
+<!--<matrix-sheet size="33" offset="25%"></matrix-sheet>-->
+<!--<matrix-sheet size="33" offset="50%"></matrix-sheet>-->
 
 @@scripts-low
 </body>

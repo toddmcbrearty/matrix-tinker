@@ -28,7 +28,27 @@ model = (function() {
 })();
 
 document.addEventListener('polymer-ready', function() {
-  var matrix;
+    var list, matrix;
+    list = document.querySelector('#test-bound-list');
+    list.items = [
+        {
+            title: 'Author',
+            body : 'Foobarious Fizz, Esq.'
+        }, {
+            title: 'Document Name',
+            body : 'Foo bar baz fizz: what do we really know?'
+        }, {
+            title: 'Document Type',
+            body : 'Contract'
+        }, {
+            title: 'Effective Date',
+            body : 'Unknown',
+            icon : 'warning'
+        }, {
+            title: 'Note',
+            body : 'Now THIS is a note'
+        }
+    ];
   matrix = new Matrix(model);
   return matrix.display();
 });

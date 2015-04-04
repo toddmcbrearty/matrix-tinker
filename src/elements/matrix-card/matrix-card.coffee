@@ -1,11 +1,15 @@
 Polymer 'matrix-card',
   ready: ->
+    @style.background = @background
 
   publish:
     transformable: true
     fullSizeDims: {}
     size: 'base'
     debug: null
+    background: 'white'
+    z         : 1
+
 
   handleClick: (event) ->
 
