@@ -3,7 +3,7 @@ Polymer('matrix-list-item', {
         var body, el, icon, meta, stringUtils, title;
         if (this.data == null) {
             this.data = {};
-        }
+    }
         if (this.data.title == null) {
             title = this.querySelector('.title');
             if (title != null) {

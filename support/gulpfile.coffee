@@ -18,6 +18,7 @@ fs = require 'fs'
 path = require 'path'
 gutil = require 'gulp-util'
 prettify = require 'gulp-prettify'
+rimraf = require 'rimraf'
 
 ### PROPERTIES ###
 serve = gutil.env.serve?
@@ -28,21 +29,23 @@ ssh = process.env['SSH_CONNECTION']?
 patternBuilder = (match, replacement) ->
   return {match: match, replacement: replacement}
 
-### GULP TASKS AND WORKFLOW COLLECTIONS ###
-# WIPE existing data
-gulp.task 'clean-build', (callback) ->
-  del path.resolve(config.build), callback
+###
 
-gulp.task 'clean-dist', (callback) ->
-  del path.resolve(config.dist), callback
+  BUILD TASKS
 
-# copy all html, compile all coffeescript and scss, copy libraries, fix polymer dependencies
-gulp.task 'build', ->
+  ###
+
+gulp.task 'build-clean', ->
+#  rimraf path.resolve(config.build)
+  rimraf.sync './build', -> (error) console.log error
+
+gulp.task 'build-index', ->
   gulp.src path.resolve("#{config.src}/main/index.html")
   .pipe replace patterns: injector.getInjectionPatterns ['polymerImports', 'stylesheetMain', 'scriptsHigh', 'scriptsLow']
   .pipe prettify(indent_size: 4)
   .pipe gulp.dest path.resolve("#{config.build}")
 
+gulp.task 'build-component-html', ->
   elements = path.resolve("#{config.build}/elements")
   gulp.src path.resolve("#{config.src}/elements/**/*.html")
   .pipe deps
@@ -53,43 +56,76 @@ gulp.task 'build', ->
   .pipe prettify(indent_size: 4)
   .pipe gulp.dest elements
 
+gulp.task 'build-component-sass', ->
+  elements = path.resolve("#{config.build}/elements")
   gulp.src path.resolve("#{config.src}/elements/**/*.scss")
   .pipe sass bare: true
   .pipe gulp.dest elements
 
+gulp.task 'build-component-coffee', ->
+  elements = path.resolve("#{config.build}/elements")
   gulp.src path.resolve("#{config.src}/elements/**/*.coffee")
   .pipe coffee bare: true
   .pipe gulp.dest elements
 
+gulp.task 'build-polymer-core', ->
   gulp.src path.resolve("#{config.bower}/webcomponentsjs/**/*")
   .pipe gulp.dest path.resolve("#{config.build}/elements/webcomponentsjs")
-
   gulp.src path.resolve("#{config.bower}/polymer/**/*")
   .pipe gulp.dest path.resolve("#{config.build}/elements/polymer")
 
-#  gulp.src path.resolve("#{config.src}/elements/matrix-dependencies.html")
-#  .pipe gulp.dest path.resolve("#{config.build}/elements")
-
+gulp.task 'build-script-dependencies', ->
   gulp.src path.resolve("#{config.node}/jquery/dist/jquery.js")
   .pipe gulp.dest path.resolve("#{config.build}/scripts")
 
+gulp.task 'build-application-sass', ->
   gulp.src path.resolve("#{config.src}/main/**/*.scss")
   .pipe sass bare: true
   .pipe gulp.dest path.resolve("#{config.build}")
 
+gulp.task 'build-application-coffee', ->
   gulp.src path.resolve("#{config.src}/main/**/*.coffee")
   .pipe coffee bare: true
   .pipe gulp.dest path.resolve("#{config.build}")
 
+gulp.task 'build-all', -> runSequence 'build-clean',
+  'build-index',
+  'build-component-html',
+  'build-component-sass',
+  'build-component-coffee',
+  'build-polymer-core',
+  'build-script-dependencies',
+  'build-application-sass',
+  'build-application-coffee'
 
-gulp.task 'dist', ->
+###
+
+  DIST TASKS
+
+  ###
+
+gulp.task 'dist-clean', ->
+  rimraf.sync './public', -> (error) console.log error
+
+gulp.task 'dist-copy-main', ->
   gulp.src path.resolve("#{config.build}/index.html")
   .pipe gulp.dest path.resolve("#{config.dist}")
-  gulp.src path.resolve("#{config.build}/scripts/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/scripts")
+
+gulp.task 'dist-copy-style', ->
   gulp.src path.resolve("#{config.build}/style/**/*")
   .pipe gulp.dest path.resolve("#{config.dist}/style")
 
+gulp.task 'dist-copy-scripts', ->
+  gulp.src path.resolve("#{config.build}/scripts/**/*")
+  .pipe gulp.dest path.resolve("#{config.dist}/scripts")
+
+gulp.task 'dist-dependencies', ->
+  gulp.src path.resolve("#{config.build}/elements/webcomponentsjs/**/*")
+  .pipe gulp.dest path.resolve("#{config.dist}/elements/webcomponentsjs")
+  gulp.src path.resolve("#{config.build}/elements/polymer/**/*")
+  .pipe gulp.dest path.resolve("#{config.dist}/elements/polymer")
+
+gulp.task 'dist-vulcanize', ->
   gulp.src path.resolve("#{config.build}/elements/matrix-dependencies.html")
   .pipe vulcanize
     dest: path.resolve("#{config.build}/elements")
@@ -99,26 +135,61 @@ gulp.task 'dist', ->
     csp: false
   .pipe gulp.dest path.resolve("#{config.dist}/elements")
 
-  gulp.src path.resolve("#{config.build}/elements/webcomponentsjs/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/elements/webcomponentsjs")
+gulp.task 'dist-all', -> runSequence 'dist-clean',
+  'dist-copy-main',
+  'dist-copy-style',
+  'dist-copy-scripts',
+  'dist-dependencies',
+  'dist-vulcanize'
 
-  gulp.src path.resolve("#{config.build}/elements/polymer/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/elements/polymer")
 
+###
+  COMPILED TASKS
+  ###
+
+gulp.task 'build-dist-all', -> runSequence 'build-clean',
+  'build-index',
+  'build-component-html',
+  'build-component-sass',
+  'build-component-coffee',
+  'build-polymer-core',
+  'build-script-dependencies',
+  'build-application-sass',
+  'build-application-coffee',
+  'dist-clean',
+  'dist-copy-main',
+  'dist-copy-style',
+  'dist-copy-scripts',
+  'dist-dependencies',
+  'dist-vulcanize'
 
 # DEFAULT TASKS - These will be run sequentially when 'gulp' is invoked with no arguments
-gulp.task 'default', ->
-  runSequence 'clean-build', 'clean-dist', 'build', ->
-    runSequence 'dist'
+gulp.task 'default', -> runSequence 'build-dist-all'
 
+
+###
+  WATCHER TASKS
+  ###
+
+gulp.task 'rebuild-components', -> runSequence 'build-component-html',
+  'build-component-sass',
+  'build-component-coffee',
+  'dist-vulcanize'
+
+gulp.task 'rebuild-sass', -> runSequence 'build-application-sass', 'dist-copy-style'
+
+gulp.task 'rebuild-coffee', -> runSequence 'build-application-coffee', 'dist-copy-scripts'
+
+gulp.task 'rebuild-main', -> runSequence 'build-index', 'dist-copy-main'
 
 
 ### WATCHERS ###
 gulp.task 'watch', ->
-  gulp.watch path.resolve(config.paths.src.scss.root, '**/*.scss'), ['styles']
-  gulp.watch path.resolve(config.paths.src.coffee.root, '**/*.coffee'), ['coffee']
-  gulp.watch path.resolve(config.paths.src.elements.root, '**/*.html'), ['vulcanize', 'copy']
-  gulp.watch path.resolve(config.paths.src.assets, '/index.html'), ['copy']
+  gulp.watch path.resolve("#{config.src}/elements/**/*"), ['rebuild-components']
+  gulp.watch path.resolve("#{config.src}/main/**/*.scss"), ['rebuild-sass']
+  gulp.watch path.resolve("#{config.src}/main/**/*.coffee"), ['rebuild-coffee']
+  gulp.watch path.resolve("#{config.src}/main/**/*.html"), ['rebuild-coffee']
+
 
 # BrowserSync server
 gulp.task 'serve', ->
@@ -132,9 +203,7 @@ gulp.task 'serve', ->
     injectChanges: false
     files:
       [
-        path.resolve("#{config.dist}/style/*.css"),
-        path.resolve("#{config.dist}/scripts/*.js"),
-        path.resolve("#{config.dist}/index.html")
+        path.resolve("#{config.dist}/**/*{.html,.js,.css}")
       ]
 
 gulp.task 'serve-local', ->

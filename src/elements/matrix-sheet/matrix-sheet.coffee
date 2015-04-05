@@ -1,9 +1,9 @@
 Polymer 'matrix-sheet',
-  publish:
-    sequence: null
-#    origin: 'left'
-#    offset: '0'
-#    size: '100%'
+  offset: '0'
+  size  : '100%'
+
+  sequence: null
+  origin  : 'left'
 
 
   ready: ->

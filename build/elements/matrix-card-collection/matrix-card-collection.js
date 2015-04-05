@@ -15,7 +15,7 @@ Polymer('matrix-card-collection', {
             $(element).on('matrixUnstickEnd', transformer.grow);
             $(element).on('matrixScaleEnd', ghost.stick);
             return;
-        }
+    }
         if (element.size === 'expanded') {
             transformer.shrinkAlone(element);
         }

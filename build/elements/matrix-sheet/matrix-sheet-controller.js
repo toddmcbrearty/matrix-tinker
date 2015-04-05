@@ -18,7 +18,7 @@ Polymer('matrix-sheet-controller', {
             if (item.sequence != null) {
                 sequenced = item;
             }
-        }
+    }
         if (sequenced == null) {
             sequenced = [];
         }
