@@ -10,7 +10,7 @@ Polymer('matrix-string-utilities', {
       return '-' + match.toLowerCase();
     });
   },
-    escapeHtml : function (string) {
+    escapeHtml: function (string) {
         var entityMap;
         entityMap = {
             "&": "&amp;",

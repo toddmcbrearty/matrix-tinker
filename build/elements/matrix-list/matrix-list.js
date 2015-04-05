@@ -6,7 +6,7 @@ Polymer('matrix-list', {
             if (listTitle != null) {
                 return this.listTitle = listTitle.innerText;
             }
-        }
+    }
     },
     created: function () {
     }

@@ -4,21 +4,9 @@
   //  background: white;
 }
 
-:host([naked]) {
-  matrix-toolbar {
-    display: none!important;
-  }
-}
-
 :host([fullsize]) {
   height: 100%;
   width: 100%;
-}
-
-:host([no-ripple]) {
-  paper-ripple {
-    display: none!important;
-  }
 }
 
 paper-shadow {
@@ -26,3 +14,11 @@ paper-shadow {
   height: 100%;
   width: 100%;
 }
+
+::content core-icon {
+  pointer-events: none;
+}
+
+//matrix-toolbar, .card-content {
+//  pointer-events: none;
+//}

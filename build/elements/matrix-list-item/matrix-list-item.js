@@ -20,13 +20,13 @@ Polymer('matrix-list-item', {
                     if (el.innerText !== '') {
                         results.push(el.innerText);
                     }
-                }
+        }
                 return results;
             }).call(this);
             meta = document.createElement('core-meta');
             stringUtils = meta.byId('matrix-string-utils');
             this.data.body = stringUtils.escapeHtml(body.join(''));
-        }
+    }
         if (this.data.icon == null) {
             icon = this.querySelector('core-icon');
             return this.data.icon = icon != null ? icon.getAttribute('icon') : void 0;

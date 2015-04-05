@@ -1,15 +1,15 @@
 Polymer 'matrix-sheet',
   publish:
-    size: 100
     sequence: null
-    origin: 'left'
-    offset: '0'
+#    origin: 'left'
+#    offset: '0'
+#    size: '100%'
 
 
   ready: ->
-    @style.width = "#{(parseInt(@size) or 0)}%"
+    @style.width = ("#{@size}" if @size?) or '100%'
 
     if @offset.substr(@offset.length - 1) is '%'
       @offset = parseInt(window.innerWidth) * (parseFloat(@offset) / 100)
 
-    @style[@origin] = "#{@offset}px"
+    @style[@origin] = "#{@offset}px" if @origin?

@@ -8,28 +8,25 @@
 </head>
 <body unresolved fullbleed>
 
+<matrix-sheet-controller></matrix-sheet-controller>
 
+<matrix-sheet background="#E5E5E5" size="calc(100% - 300px)" origin="right" offset="300px">
+    <matrix-card-collection id="test-card-collection"></matrix-card-collection>
+</matrix-sheet>
+
+<matrix-sheet background="#E5E5E5">
+    <div style="height: 100%; width: 300px; right: 0; left: auto; position: absolute;">
+        <matrix-card id="properties-general" size="expanded" transformable="false" z="1">
+            <matrix-list id="test-bound-list">
+                <span class="title">List of Justice</span>
+            </matrix-list>
+        </matrix-card>
+    </div>
+</matrix-sheet>
 
 <matrix-scaffold>
     <matrix-drawer modal application></matrix-drawer>
-    <div relative flex layout horizontal wrap class="scroll">
-        <template is="auto-binding">
-            <template repeat="{{item in activeCollection}}">
-                <matrix-card class="card" id="card{{item.value}}" fullSizeDims="{{item.dims}}">
-                    <core-icon icon="{{item.icon}}"></core-icon>
-                    <h2>{{item.value}}</h2>
-                </matrix-card>
-            </template>
-        </template>
-    </div>
     <matrix-drawer right>
-        <matrix-card id="properties-general" size="expanded" transformable="false" naked>
-            <template is="auto-binding" id="test-bound-list">
-                <matrix-list items="{{items}}">
-                    <span class="title">List of Justice</span>
-                </matrix-list>
-            </template>
-        </matrix-card>
     </matrix-drawer>
 </matrix-scaffold>
 

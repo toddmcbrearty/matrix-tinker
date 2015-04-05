@@ -1,0 +1,10 @@
+:host {
+    padding: 15px 0;
+}
+
+matrix-card {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 20px;
+    transition: all 0.5s linear;
+}

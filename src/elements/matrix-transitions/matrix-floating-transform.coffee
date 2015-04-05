@@ -9,8 +9,11 @@ Polymer 'matrix-floating-transform',
     dims = element?.fullSizeDims or {}
 
     meta = document.createElement('core-meta')
-    elUtils = meta.byId('matrix-element-utils')
-    ghost = elUtils.findGhost(element)
+    #    elUtils = meta.byId('matrix-element-utils')
+    #    ghost = elUtils.findGhost(element)
+    #    return unless ghost?
+
+    ghost = element.ghost
     return unless ghost?
 
     # make a by-value copy of the current style settings for rollback
@@ -51,8 +54,8 @@ Polymer 'matrix-floating-transform',
     ]
 
     transformer = new MatrixFloatingTransform()
-    ghost.keyframeTransition = transformer.keyframeTransition
-    element.keyframeTransition = transformer.keyframeTransition
+    element.keyframeTransition = transformer.keyframeTransition unless element.keyframeTransition?
+    ghost.keyframeTransition = transformer.keyframeTransition unless ghost.keyframeTransition?
 
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition)
     ghost.keyframeTransition(ghost)
@@ -64,14 +67,38 @@ Polymer 'matrix-floating-transform',
 
     return
 
+  shrinkAlone       : (element) ->
+    element.keyframeStack = [
+      {
+        transition: "0.5s all ease-in",
+        width     : element.fromStyle.width,
+        height    : element.fromStyle.height,
+        marginLeft: element.fromStyle.marginLeft
+#        left: element.fromStyle.left
+#        top: "#{top}px",
+#        left: "#{left}px"
+      }
+    ]
+
+    transformer = new MatrixFloatingTransform()
+    element.keyframeTransition = transformer.keyframeTransition unless element.keyframeTransition?
+
+    element.addEventListener('webkitTransitionEnd', element.keyframeTransition)
+    element.keyframeTransition(element)
+
+    element.size = 'base'
+
   ###
   # Returns an element to its base size
   ###
   shrink: (event) ->
     element = event.target
     meta = document.createElement('core-meta')
-    elUtils = meta.byId('matrix-element-utils')
-    ghost = elUtils.findGhost(element)
+    #    elUtils = meta.byId('matrix-element-utils')
+    #    ghost = elUtils.findGhost(element)
+    #    return unless ghost?
+
+    ghost = element.ghost
     return unless ghost?
 
     # find the element immediately before the ghost, if one exists
@@ -94,7 +121,7 @@ Polymer 'matrix-floating-transform',
 
     ghost.keyframeStack = [
       {
-        transition: '0.6s all linear',
+        transition: '0.5s all linear',
         width: element.fromStyle.width,
         height: element.fromStyle.height,
         marginLeft: element.fromStyle.marginLeft,
@@ -109,15 +136,15 @@ Polymer 'matrix-floating-transform',
         width: element.fromStyle.width,
         height: element.fromStyle.height,
         marginLeft: element.fromStyle.marginLeft
-        top: "#{top}px",
-        left: "#{left}px"
+#        top: "#{top}px",
+#        left: "#{left}px"
       },
-      {transition: '', left: "0px"}
+      {transition: '', top: '0px', left: "0px"}
     ]
 
     transformer = new MatrixFloatingTransform()
-    ghost.keyframeTransition = transformer.keyframeTransition
-    element.keyframeTransition = transformer.keyframeTransition
+    element.keyframeTransition = transformer.keyframeTransition unless element.keyframeTransition?
+    ghost.keyframeTransition = transformer.keyframeTransition unless ghost.keyframeTransition?
 
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition)
     ghost.keyframeTransition(ghost)
@@ -137,18 +164,35 @@ Polymer 'matrix-floating-transform',
   ###
   keyframeTransition: (event = null) ->
 
-    element = event if Object::toString.call(event) in ['[object HTMLElement]', '[object HTMLDivElement]']
-    element ?= (event?.target if Object::toString.call(event) is "[object TransitionEvent]")
+#    element = event if Object::toString.call(event) in ['[object HTMLElement]', '[object HTMLDivElement]']
+    if event.localName?
+      element = event if event.localName is 'matrix-card'
+      element = event if event.localName is 'matrix-ghost'
 
+    element ?= (event?.target if Object::toString.call(event) is "[object TransitionEvent]")
+    #    element ?= (event?.target if event?.target?.localName is "matrix-card")
+
+    return unless element?
+
+    return console.log('bullshit element', element) unless element.localName in ['matrix-card', 'matrix-ghost']
     return console.log('Unable to find element', event) unless element?
     return unless element.keyframeStack instanceof Array
 
     # fire end event if keyframeStack is empty now
     if element.keyframeStack.length is 0
       delete element.activeKeyframe if element.activeKeyframe?
+      delete element.keyframeStack if element.keyframeStack?
+
       element.dispatchEvent(new Event('matrixScaleEnd'))
       element.removeEventListener('webkitTransitionEnd', element.keyframeTransition)
-      return
+
+    #      if element.fromStyle?
+    #        element.style.transition = ''
+    #        for item, value of element.fromStyle
+    #          element.style[item] = value unless item is 'transition'
+    #
+    #        element.style.transition = element.fromStyle.transition if element.fromStyle.transition?
+    #      return
 
     element.activeKeyframe ?= {}
 
@@ -162,6 +206,7 @@ Polymer 'matrix-floating-transform',
     return unless Object.keys(element.activeKeyframe).length is 0
 
     # iterate over keyframe and set properties, applying immediately where possible
+    return unless element.keyframeStack?
     element.activeKeyframe = element.keyframeStack.shift()
     computedStyle = getComputedStyle(element)
 
@@ -178,6 +223,6 @@ Polymer 'matrix-floating-transform',
       delete element.activeKeyframe[key] if key is 'width' and parseInt(computedStyle[prop]) is element.parentNode.offsetWidth
 
     # if no properties remain, manually re-trigger this method
-    @keyframeTransition(element) if Object.keys(element.activeKeyframe).length is 0
+    element.keyframeTransition(element) if Object.keys(element.activeKeyframe).length is 0
 
 

@@ -1,4 +1,4 @@
-var Matrix, dims, i, icons, item, model, range, results;
+var Matrix, dims, i, icons, item, list, model, range, results;
 
 icons = ['cloud', 'attachment', 'inbox', 'polymer', 'redeem', 'settings', 'thumb-up', 'translate', 'warning'];
 
@@ -27,29 +27,29 @@ model = (function() {
   return results1;
 })();
 
+list = [
+    {
+        title: 'Author',
+        body : 'Foobarious Fizz, Esq.'
+    }, {
+        title: 'Document Name',
+        body : 'Foo bar baz fizz: what do we really know?'
+    }, {
+        title: 'Document Type',
+        body : 'Contract'
+    }, {
+        title: 'Effective Date',
+        body : 'Unknown',
+        icon : 'warning'
+    }, {
+        title: 'Note',
+        body : 'Now THIS is a note'
+    }
+];
+
 document.addEventListener('polymer-ready', function() {
-    var list, matrix;
-    list = document.querySelector('#test-bound-list');
-    list.items = [
-        {
-            title: 'Author',
-            body : 'Foobarious Fizz, Esq.'
-        }, {
-            title: 'Document Name',
-            body : 'Foo bar baz fizz: what do we really know?'
-        }, {
-            title: 'Document Type',
-            body : 'Contract'
-        }, {
-            title: 'Effective Date',
-            body : 'Unknown',
-            icon : 'warning'
-        }, {
-            title: 'Note',
-            body : 'Now THIS is a note'
-        }
-    ];
-  matrix = new Matrix(model);
+    var matrix;
+    matrix = new Matrix(model, list);
   return matrix.display();
 });
 
@@ -60,12 +60,14 @@ $(document).keyup(function(event) {
 });
 
 Matrix = (function() {
-  function Matrix(data) {
+    function Matrix(data, list1) {
     this.data = data;
+        this.list = list1;
   }
 
   Matrix.prototype.display = function() {
-    return document.querySelector('template[is="auto-binding"]').activeCollection = this.data;
+      document.querySelector('#test-card-collection').cards = this.data;
+      return document.querySelector('#test-bound-list').items = this.list;
   };
 
   return Matrix;

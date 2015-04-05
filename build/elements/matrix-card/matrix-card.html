@@ -1,12 +1,16 @@
-<polymer-element name="matrix-card" constructor="MatrixCard" on-click="{{handleClick}}">
+<polymer-element name="matrix-card" constructor="MatrixCard" attributes="z">
     <template>
         <link href="matrix-card.css" rel="stylesheet" shim-shadowdom>
         <paper-shadow z="[[z]]" animated>
-            <matrix-toolbar>
-                <content select="core-icon, img"></content>
-                <content select=".toolbar"></content>
-            </matrix-toolbar>
-            <content></content>
+            <template if="{{toolbar}}">
+                <matrix-toolbar>
+                    <content select="core-icon"></content>
+                    <content select=".toolbar"></content>
+                </matrix-toolbar>
+            </template>
+            <div class="card-content">
+                <content></content>
+            </div>
         </paper-shadow>
     </template>
     <script src="matrix-card.js"></script>

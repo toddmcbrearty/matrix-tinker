@@ -1,0 +1,13 @@
+<polymer-element name="matrix-card-collection" constructor="MatrixCardCollection" attributes="cards">
+    <template>
+        <link rel="stylesheet" href="matrix-card-collection.css">
+        <div horizontal layout around-justified wrap>
+            <template repeat="{{card in cards}}">
+                <matrix-card relative class="card" id="card{{card.value}}" fullSizeDims="{{card.dims}}" z="1" on-click="{{transform}}">
+                    <core-icon icon="{{card.icon}}"></core-icon>
+                    <h2>{{card.value}}</h2></matrix-card>
+            </template>
+        </div>
+    </template>
+    <script src="matrix-card-collection.js"></script>
+</polymer-element>

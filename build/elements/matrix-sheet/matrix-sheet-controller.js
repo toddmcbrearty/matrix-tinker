@@ -12,7 +12,7 @@ Polymer('matrix-sheet-controller', {
         group = scope.querySelectorAll(selector);
         if (!(group.length > 0)) {
             return;
-        }
+    }
         for (i = 0, len = group.length; i < len; i++) {
             item = group[i];
             if (item.sequence != null) {

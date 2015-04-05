@@ -4,18 +4,16 @@ range = [0...100]
 dims = {width: '100%', height: '500px'}
 model = (value: ++item, icon: icons[Math.floor(Math.random()*icons.length)], dims: dims for item in range)
 
+list = [
+  {title: 'Author', body: 'Foobarious Fizz, Esq.'}
+  {title: 'Document Name', body: 'Foo bar baz fizz: what do we really know?'}
+  {title: 'Document Type', body: 'Contract'}
+  {title: 'Effective Date', body: 'Unknown', icon: 'warning'}
+  {title: 'Note', body: 'Now THIS is a note'}
+]
 
 document.addEventListener 'polymer-ready', ->
-  list = document.querySelector('#test-bound-list')
-  list.items = [
-    {title: 'Author', body: 'Foobarious Fizz, Esq.'}
-    {title: 'Document Name', body: 'Foo bar baz fizz: what do we really know?'}
-    {title: 'Document Type', body: 'Contract'}
-    {title: 'Effective Date', body: 'Unknown', icon: 'warning'}
-    {title: 'Note', body: 'Now THIS is a note'}
-  ]
-
-  matrix = new Matrix(model)
+  matrix = new Matrix(model, list)
   matrix.display()
 
 $(document).keyup (event) ->
@@ -25,6 +23,7 @@ $(document).keyup (event) ->
 
 
 class Matrix
-  constructor: (@data) ->
+  constructor: (@data, @list) ->
   display: ->
-    document.querySelector('template[is="auto-binding"]').activeCollection = @data
+    document.querySelector('#test-card-collection').cards = @data
+    document.querySelector('#test-bound-list').items = @list

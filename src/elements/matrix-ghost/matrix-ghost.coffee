@@ -8,6 +8,7 @@ Polymer 'matrix-ghost',
 
   assign: (element) ->
     @target = element
+    element.ghost = this
     meta = document.createElement('core-meta')
     @style.background = "#999" unless @debug is false
     styleUtils = meta.byId('matrix-style-utils')
@@ -30,10 +31,10 @@ Polymer 'matrix-ghost',
 
     # detach element and float in place
     style = getComputedStyle(@target)
-    @target.style.zIndex = 10
     @target.style.top = "#{@target.offsetTop - (parseInt(style.marginTop) or 0)}px"
     @target.style.left = "#{@target.offsetLeft - (parseInt(style.marginLeft) or 0)}px"
     @target.style.position = 'absolute'
+    @target.style.zIndex = 10
 
     # insert the ghost below element
     @target.parentNode.insertBefore(this, @target)
@@ -55,7 +56,9 @@ Polymer 'matrix-ghost',
 
     meta = document.createElement('core-meta')
     elUtils = meta.byId('matrix-element-utils')
-    ghost = elUtils.findGhost(target)
+    #    ghost = elUtils.findGhost(target)
+
+    ghost = target.ghost
 
 
     # apply the ghost's stylesheet to the element
@@ -65,9 +68,10 @@ Polymer 'matrix-ghost',
     # replace ghost with element and return element positioning to 'relative'
     ghost.parentNode.replaceChild(target, ghost)
     target.style.transition = ''
-    target.style.position = 'relative'
-    target.style.zIndex = 'auto'
-    target.style.top = '0px'
+    target.style.position = target.beginState.position
+    target.style.zIndex = target.beginState.zIndex
+    target.style.top = 'auto'
+    target.style.left = 'auto'
 
     # gently resettle any shadows
     elUtils.setShadowZ(target, 1)
