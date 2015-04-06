@@ -1,22 +1,30 @@
 <html><head>
 
 
-    <style shim-shadowdom="">
-        /* FIXME consider theming */
-
-        html /deep/ input[is=core-input] {
-            width: 20em;
-            font: inherit;
-            margin: 0;
-            padding: 0;
-            background-color: transparent;
-            border: 0;
-            outline: none;
-        }
-    </style>
 
 
-    <style shim-shadowdom="">/*
+
+<style shim-shadowdom="">
+  /* FIXME consider theming */
+
+  html /deep/ input[is=core-input] {
+    width: 20em;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    outline: none;
+  }
+</style>
+
+
+
+
+
+
+
+<style shim-shadowdom="">/*
  * @license
  * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
  * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -84,7 +92,22 @@ html /deep/ .paper-shadow-bottom-z-5 {
 }</style>
 
 
-    <style shim-shadowdom="">/* Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style shim-shadowdom="">/* Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
@@ -198,290 +221,276 @@ html /deep/ core-icon {
   
 </script>
 </polymer-element>
-    <polymer-element name="matrix-string-utilities" extends="core-meta" assetpath="matrix-utilities/">
-        <script>
-            /*
-             GET INSTANCE
-             meta = document.createElement('core-meta')
-             stringUtils = meta.byId('matrix-string-utils')
-             */
-            Polymer('matrix-string-utilities', {
-                hyphenToCamel: function (string) {
-                    return string.replace(/([A-Z])/g, function (match) {
-                        return '-' + match.toLowerCase();
-                    });
-                },
-                escapeHtml   : function (string) {
-                    var entityMap;
-                    entityMap = {
-                        "&": "&amp;",
-                        "<": "&lt;",
-                        ">": "&gt;",
-                        '"': '&quot;',
-                        "'": '&#39;',
-                        "/": '&#x2F;'
-                    };
-                    return string.replace(/[&<>"'\/]]/g, function (match) {
-                        return entityMap[match];
-                    });
-                }
-            });
-        </script>
-        <template></template>
-    </polymer-element>
-    <matrix-string-utilities id="matrix-string-utils"></matrix-string-utilities>
-    <polymer-element name="core-input" extends="input" assetpath="../../vendor/bower_components/core-input/">
+<polymer-element name="matrix-string-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    stringUtils = meta.byId('matrix-string-utils')
+ */
+Polymer('matrix-string-utilities', {
+  hyphenToCamel: function(string) {
+    return string.replace(/([A-Z])/g, function(match) {
+      return '-' + match.toLowerCase();
+    });
+  },
+  escapeHtml: function(string) {
+    var entityMap;
+    entityMap = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': '&quot;',
+      "'": '&#39;',
+      "/": '&#x2F;'
+    };
+    return string.replace(/[&<>"'\/]]/g, function(match) {
+      return entityMap[match];
+    });
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<matrix-string-utilities id="matrix-string-utils"></matrix-string-utilities>
+<polymer-element name="core-input" extends="input" assetpath="../../vendor/bower_components/core-input/">
 
-        <script>
+<script>
 
-            Polymer('core-input', {
+  Polymer('core-input', {
 
-                publish: {
+    publish: {
 
-                    /**
-                     * The "committed" value of the input, ie. the input value when the user
-                     * hits the "enter" key or blurs the input after changing the value. You
-                     * can bind to this value instead of listening for the "change" event.
-                     * Setting this property has no effect on the input value.
-                     *
-                     * @attribute committedValue
-                     * @type string
-                     * @default ''
-                     */
-                    committedValue: '',
+      /**
+       * The "committed" value of the input, ie. the input value when the user
+       * hits the "enter" key or blurs the input after changing the value. You
+       * can bind to this value instead of listening for the "change" event.
+       * Setting this property has no effect on the input value.
+       *
+       * @attribute committedValue
+       * @type string
+       * @default ''
+       */
+      committedValue: '',
 
-                    /**
-                     * Set to true to prevent invalid input from being entered.
-                     *
-                     * @attribute preventInvalidInput
-                     * @type boolean
-                     * @default false
-                     */
-                    preventInvalidInput: false
+      /**
+       * Set to true to prevent invalid input from being entered.
+       *
+       * @attribute preventInvalidInput
+       * @type boolean
+       * @default false
+       */
+      preventInvalidInput: false
 
-                },
+    },
 
-                previousValidInput: '',
+    previousValidInput: '',
 
-                eventDelegates: {
-                    input : 'inputAction',
-                    change: 'changeAction'
-                },
+    eventDelegates: {
+      input: 'inputAction',
+      change: 'changeAction'
+    },
 
-                ready: function () {
-                    /* set ARIA attributes */
-                    this.disabledHandler();
-                    this.placeholderHandler();
-                },
+    ready: function() {
+      /* set ARIA attributes */
+      this.disabledHandler();
+      this.placeholderHandler();
+    },
 
-                attributeChanged: function (attr, old) {
-                    if (this[attr + 'Handler']) {
-                        this[attr + 'Handler'](old);
-                    }
-                },
+    attributeChanged: function(attr, old) {
+      if (this[attr + 'Handler']) {
+        this[attr + 'Handler'](old);
+      }
+    },
 
-                disabledHandler: function () {
-                    if (this.disabled) {
-                        this.setAttribute('aria-disabled', '');
-                    } else {
-                        this.removeAttribute('aria-disabled');
-                    }
-                },
+    disabledHandler: function() {
+      if (this.disabled) {
+        this.setAttribute('aria-disabled', '');
+      } else {
+        this.removeAttribute('aria-disabled');
+      }
+    },
 
-                placeholderHandler: function () {
-                    if (this.placeholder) {
-                        this.setAttribute('aria-label', this.placeholder);
-                    } else {
-                        this.removeAttribute('aria-label');
-                    }
-                },
+    placeholderHandler: function() {
+      if (this.placeholder) {
+        this.setAttribute('aria-label', this.placeholder);
+      } else {
+        this.removeAttribute('aria-label');
+      }
+    },
 
-                /**
-                 * Commits the `value` to `committedValue`
-                 *
-                 * @method commit
-                 */
-                commit: function () {
-                    this.committedValue = this.value;
-                },
+    /**
+     * Commits the `value` to `committedValue`
+     *
+     * @method commit
+     */
+    commit: function() {
+      this.committedValue = this.value;
+    },
 
-                changeAction: function () {
-                    this.commit();
-                },
+    changeAction: function() {
+      this.commit();
+    },
 
-                inputAction: function (e) {
-                    if (this.preventInvalidInput) {
-                        if (!e.target.validity.valid) {
-                            e.target.value = this.previousValidInput;
-                        } else {
-                            this.previousValidInput = e.target.value;
-                        }
-                    }
-                }
+    inputAction: function(e) {
+      if (this.preventInvalidInput) {
+        if (!e.target.validity.valid) {
+          e.target.value = this.previousValidInput;
+        } else {
+          this.previousValidInput = e.target.value;
+        }
+      }
+    }
 
-            });
+  });
 
-        </script>
+</script>
 
-    </polymer-element>
-    <polymer-element name="matrix-input" constructor="MatrixInput" attributes="name, placeholder, value, type, strict, validator" assetpath="matrix-input/">
-        <template>
-            <style></style>
-            <input is="core-input" value="{{value}}" placeholder="{{placeholder}}"></template>
-        <script>Polymer('matrix-input', {
-            ready: function () {
-                return console.log(this.value);
-            }
-        });
-        </script>
-    </polymer-element>
-    <polymer-element name="matrix-list-item" constructor="MatrixItem" attributes="data" assetpath="matrix-list-item/">
-        <template>
-            <style shim-shadowdom="">:host {
-                display: block;
-                width: 100%;
-                overflow: hidden;
-                color: #5C5959;
-                font-size: 0.8rem;
-                font-weight: 400;
-            }
+</polymer-element>
+<polymer-element name="matrix-input" constructor="MatrixInput" attributes="name, placeholder, value, type, strict, validator" assetpath="matrix-input/">
+    <template>
+        <style></style>
+        <input is="core-input" value="{{value}}" placeholder="{{placeholder}}"> </template>
+    <script>Polymer('matrix-input', {
+  ready: function() {
+    return console.log(this.value);
+  }
+});
+</script>
+</polymer-element><polymer-element name="matrix-list-item" constructor="MatrixItem" attributes="data" assetpath="matrix-list-item/">
+    <template>
+        <style shim-shadowdom="">:host {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  color: #5C5959;
+  font-size: 0.8rem;
+  font-weight: 400; }
 
-            .matrix-list-item {
-                padding: 5px 15px 5px 0;
-            }
-
-            .matrix-list-item .list-item-icon {
-                height: 48px;
-                width: 48px;
-                min-width: 48px;
-            }
-
-            .matrix-list-item .list-item-icon core-icon {
-                height: 24px;
-                width: 24px;
-                color: #999;
-            }
-
-            .matrix-list-item .list-item-title {
-                line-height: 1;
-                font-weight: 600;
-                overflow: hidden;
-                margin-bottom: 3px;
-            }
-            </style>
-            <div class="matrix-list-item" horizontal="" layout="">
-                <div class="list-item-icon" horizontal="" layout="" center="" center-justified="">
-                    <template bind="" if="{{data.icon}}">
-                        <core-icon icon="{{data.icon}}"></core-icon>
+.matrix-list-item {
+  padding: 5px 15px 5px 0; }
+  .matrix-list-item .list-item-icon {
+    height: 48px;
+    width: 48px;
+    min-width: 48px; }
+    .matrix-list-item .list-item-icon core-icon {
+      height: 24px;
+      width: 24px;
+      color: #999; }
+  .matrix-list-item .list-item-title {
+    line-height: 1;
+    font-weight: 600;
+    overflow: hidden;
+    margin-bottom: 3px; }
+</style>
+        <div class="matrix-list-item" horizontal="" layout="">
+            <div class="list-item-icon" horizontal="" layout="" center="" center-justified="">
+                <template bind="" if="{{data.icon}}">
+                    <core-icon icon="{{data.icon}}"></core-icon>
+                </template>
+            </div>
+            <div horizontal="" layout="" center="">
+                <div>
+                    <template if="{{data.title}}">
+                        <div class="list-item-title">{{data.title}}</div>
                     </template>
-                </div>
-                <div horizontal="" layout="" center="">
-                    <div>
-                        <template if="{{data.title}}">
-                            <div class="list-item-title">{{data.title}}</div>
-                    </template>
-                        <div flex="" class="list-item-body">
-                            <matrix-input name="{{data.name}}" value="{{data.body}}"></matrix-input>
+                    <div flex="" class="list-item-body">
+                        <matrix-input name="{{data.name}}" value="{{data.body}}"></matrix-input>
                     </div>
                 </div>
             </div>
-            </div>
-        </template>
-        <script>Polymer('matrix-list-item', {
-            created: function () {
-                var base, base1, body, el, icon, meta, stringUtils, title;
-                if (this.data == null) {
-                    this.data = {};
-                }
-                if (this.data.title == null) {
-                    title = this.querySelector('.title');
-                    if (title != null) {
-                        this.data.title = title.innerText;
-                    }
-                }
-                if (this.data.body == null) {
-                    body = (function () {
-                        var i, len, ref, results;
-                        ref = this.querySelectorAll(':not(.title)');
-                        results = [];
-                        for (i = 0, len = ref.length; i < len; i++) {
-                            el = ref[i];
-                            if (el.innerText !== '') {
-                                results.push(el.innerText);
-                            }
-                        }
-                        return results;
-                    }).call(this);
-                    meta = document.createElement('core-meta');
-                    stringUtils = meta.byId('matrix-string-utils');
-                    this.data.body = stringUtils.escapeHtml(body.join(''));
-                }
-                if (this.data.icon == null) {
-                    icon = this.querySelector('core-icon');
-                    this.data.icon = icon != null ? icon.getAttribute('icon') : void 0;
-                }
-                if ((base = this.data).name == null) {
-                    base.name = '';
-                }
-                return (base1 = this.data).label != null ? base1.label : base1.label = '';
-            }
-        });
-        </script>
-    </polymer-element>
-    <polymer-element name="matrix-list" constructor="MatrixList" attributes="items, listTitle" assetpath="matrix-list/">
-        <template>
-            <style shim-shadowdom="">:host {
-                display: block;
-                height: 100%;
-                width: 100%;
-                padding-top: 15px;
-                padding-bottom: 15px;
-            }
+        </div>
+    </template>
+    <script>Polymer('matrix-list-item', {
+  created: function() {
+    var base, base1, body, el, icon, meta, stringUtils, title;
+    if (this.data == null) {
+      this.data = {};
+    }
+    if (this.data.title == null) {
+      title = this.querySelector('.title');
+      if (title != null) {
+        this.data.title = title.innerText;
+      }
+    }
+    if (this.data.body == null) {
+      body = (function() {
+        var i, len, ref, results;
+        ref = this.querySelectorAll(':not(.title)');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          el = ref[i];
+          if (el.innerText !== '') {
+            results.push(el.innerText);
+          }
+        }
+        return results;
+      }).call(this);
+      meta = document.createElement('core-meta');
+      stringUtils = meta.byId('matrix-string-utils');
+      this.data.body = stringUtils.escapeHtml(body.join(''));
+    }
+    if (this.data.icon == null) {
+      icon = this.querySelector('core-icon');
+      this.data.icon = icon != null ? icon.getAttribute('icon') : void 0;
+    }
+    if ((base = this.data).name == null) {
+      base.name = '';
+    }
+    return (base1 = this.data).label != null ? base1.label : base1.label = '';
+  }
+});
+</script>
+</polymer-element><polymer-element name="matrix-list" constructor="MatrixList" attributes="items, listTitle" assetpath="matrix-list/">
+    <template>
+        <style shim-shadowdom="">:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px; }
 
-            .list-title {
-                font-size: 0.9em;
-                font-weight: 500;
-                display: block;
-                margin-left: 15px;
-                margin-bottom: 10px;
-                line-height: 1;
-                overflow: hidden;
-                color: #999;
-            }
+.list-title {
+  font-size: 0.9em;
+  font-weight: 500;
+  display: block;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  line-height: 1;
+  overflow: hidden;
+  color: #999; }
 
-            matrix-list-item:not(:last-child):after {
-                height: 1px;
-                background: #E5E5E5;
-                margin-left: 48px;
-                width: 100%;
-                display: block;
-                content: "";
-            }
-            </style>
-            <div vertical="" layout="" class="matrix-list-layout">
-                <template bind="" if="{{listTitle}}">
-                    <div class="list-title">{{listTitle}}</div>
-                </template>
-                <template repeat="{{item in items}}">
-                    <matrix-list-item data="{{item}}"></matrix-list-item>
-                </template>
-            </div>
-        </template>
-        <script>Polymer('matrix-list', {
-            ready  : function () {
-                var listTitle;
-                if (this.listTitle == null) {
-                    listTitle = this.querySelector('.title');
-                    if (listTitle != null) {
-                        return this.listTitle = listTitle.innerText;
-                    }
-                }
-            },
-            created: function () {
-            }
-        });
-        </script>
-    </polymer-element>
+matrix-list-item:not(:last-child):after {
+  height: 1px;
+  background: #E5E5E5;
+  margin-left: 48px;
+  width: 100%;
+  display: block;
+  content: ""; }
+</style>
+        <div vertical="" layout="" class="matrix-list-layout">
+            <template bind="" if="{{listTitle}}">
+                <div class="list-title">{{listTitle}}</div>
+            </template>
+            <template repeat="{{item in items}}">
+                <matrix-list-item data="{{item}}"></matrix-list-item>
+            </template>
+        </div>
+    </template>
+    <script>Polymer('matrix-list', {
+  ready: function() {
+    var listTitle;
+    if (this.listTitle == null) {
+      listTitle = this.querySelector('.title');
+      if (listTitle != null) {
+        return this.listTitle = listTitle.innerText;
+      }
+    }
+  },
+  created: function() {}
+});
+</script>
+</polymer-element>
 <polymer-element name="paper-shadow" assetpath="../../vendor/bower_components/paper-shadow/">
 
 <template>
@@ -541,453 +550,434 @@ html /deep/ core-icon {
 </script>
 </polymer-element>
 
-    <polymer-element name="matrix-toolbar" constructor="MatrixToolbar" assetpath="matrix-toolbar/">
-        <template>
-            <style>
-                :host {
-                    display: block;
-                    box-sizing: border-box;
-                }
-
-                div {
-                    box-sizing: border-box;
-                }
-
-                .matrix-toolbar {
-                    padding: 20px;
-                }
-
-                ::content core-icon {
-                    height: 24px;
-                    width: 24px;
-                    color: #999;
-                }
-            </style>
-            <div class="matrix-toolbar" layout="" horizontal="" center="">
-                <div>
-                    <content select="core-icon, img"></content>
-            </div>
-                <div flex="">
-                    <content></content>
-                </div>
-            </div>
-        </template>
-        <script>Polymer('matrix-toolbar');</script>
-    </polymer-element>
-    <polymer-element name="matrix-type-utilities" constructor="MatrixTypeUtilities" assetpath="matrix-utilities/">
-        <script>
-            /*
-             GET INSTANCE
-             meta = document.createElement('core-meta')
-             typeUtils = meta.byId('matrix-type-utils')
-             */
-            Polymer('matrix-type-utilities', {
-                ready    : function () {
-                },
-
-                /*
-                 * ensures @value is an instance of @type, optionally throwing an exception if not
-                 */
-                typeCheck: function (value, types, throwError) {
-                    var type, valueType;
-                    if (throwError == null) {
-                        throwError = true;
-    }
-                    valueType = Object.prototype.toString.call(value);
-                    if (typeof types !== 'string') {
-                        types = [types];
-    }
-                    if ((function () {
-                            var i, len, results;
-                            results = [];
-                            for (i = 0, len = types.length; i < len; i++) {
-                                type = types[i];
-                                results.push(valueType.match(new RegExp("/" + type + "/")));
-                            }
-                            return results;
-                        })()) {
-                        return true;
-    }
-                    if (throwError !== true) {
-                        return false;
-    }
-                    throw new TypeError("expected [object " + (types.join('/')) + "]; provided " + (Object.prototype.toString.call(value)));
-                }
-            });
-        </script>
-        <template></template>
-    </polymer-element>
-    <matrix-type-utilities id="matrix-type-utils"></matrix-type-utilities>
-    <polymer-element name="matrix-style-utilities" extends="core-meta" assetpath="matrix-utilities/">
-        <script>
-            /*
-             GET INSTANCE
-             meta = document.createElement('core-meta')
-             styleUtils = meta.byId('matrix-style-utils')
-             */
-            var indexOf = [].indexOf || function (item) {
-                    for (var i = 0, l = this.length; i < l; i++) {
-                        if (i in this && this[i] === item) return i;
-                    }
-                    return -1;
-                };
-
-            Polymer('matrix-style-utilities', {
-
-                /*
-                 * Applies all computed styles of @model to @target
-                 #
-                 * Optionally ignore blacklisted styles or only apply whitelisted styles
-                 */
-                mirrorStyle: function (model, target, blacklist, whitelist) {
-                    var modelStyle, prop, results, targetStyle, typeUtils, value;
-                    if (blacklist == null) {
-                        blacklist = null;
-    }
-                    if (whitelist == null) {
-                        whitelist = null;
-    }
-                    typeUtils = new MatrixTypeUtilities();
-                    typeUtils.typeCheck(model, ['HTMLElement', 'HTMLDivElement']);
-                    typeUtils.typeCheck(target, ['HTMLElement', 'HTMLDivElement']);
-                    modelStyle = getComputedStyle(model);
-                    targetStyle = getComputedStyle(target);
-                    if (blacklist == null) {
-                        blacklist = ['background', 'transition', 'position'];
-    }
-                    if (whitelist == null) {
-                        whitelist = ['width', 'height', 'marginLeft', 'marginTop', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'];
-    }
-                    results = [];
-                    for (prop in modelStyle) {
-                        value = modelStyle[prop];
-                        if (!(typeof prop === 'string' && indexOf.call(blacklist, prop) < 0 && targetStyle[prop] !== value)) {
-                            continue;
-      }
-                        if (indexOf.call(whitelist, prop) >= 0) {
-                            results.push(target.style[prop] = value);
-                        } else {
-                            results.push(void 0);
-                        }
-    }
-                    return results;
-                },
-                copyByValue: function (element) {
-                    var cs, key, result, value;
-                    cs = getComputedStyle(element);
-                    if (cs == null) {
-                        return null;
-    }
-                    result = {};
-                    for (key in cs) {
-                        value = cs[key];
-                        result[key] = value;
-    }
-                    return result;
-                }
-            });
-        </script>
-        <template></template>
-    </polymer-element>
-    <matrix-style-utilities id="matrix-style-utils"></matrix-style-utilities>
-    <polymer-element name="matrix-element-utilities" extends="core-meta" assetpath="matrix-utilities/">
-        <script>
-            /*
-             GET INSTANCE
-             meta = document.createElement('core-meta')
-             elUtils = meta.byId('matrix-element-utils')
-             */
-            Polymer('matrix-element-utilities', {
-
-                /*
-                 * Locate a ghost attached to `element`
-                 */
-                findGhost  : function (element) {
-                    var ghost, ghosts, i, len;
-                    ghosts = document.querySelectorAll('matrix-ghost');
-                    for (i = 0, len = ghosts.length; i < len; i++) {
-                        ghost = ghosts[i];
-                        if (ghost.target === element) {
-                            return ghost;
-      }
-                    }
-                    return null;
-                },
-                injectGhost: function (element) {
-                    var ghost;
-                    ghost = document.createElement('matrix-ghost');
-                    return ghost.assign(element);
-                },
-
-                /*
-                 * Attempts to apply Polymer z value to all elements in @element shadow DOM
-                 */
-                setShadowZ : function (element, value, tagName) {
-                    var target;
-                    if (tagName == null) {
-                        tagName = 'paper-shadow';
-                    }
-                    if (!(parseInt(value) <= 5)) {
-                        return;
-                    }
-                    if (element.shadowRoot == null) {
-                        return;
-                    }
-                    target = element.shadowRoot.querySelector(tagName);
-                    return target != null ? typeof target.setZ === "function" ? target.setZ(value) : void 0 : void 0;
-                }
-            });
-        </script>
-        <template></template>
-    </polymer-element>
-    <matrix-element-utilities id="matrix-element-utils"></matrix-element-utilities>
-    <polymer-element name="matrix-ghost" constructor="MatrixGhost" assetpath="matrix-ghost/">
-        <script>Polymer('matrix-ghost', {
-            ready  : function () {
-            },
-            publish: {
-                target: null,
-                debug : false
-            },
-            assign : function (element) {
-                var meta, styleUtils;
-                this.target = element;
-                element.ghost = this;
-                meta = document.createElement('core-meta');
-                if (this.debug !== false) {
-                    this.style.background = "#999";
-                }
-                styleUtils = meta.byId('matrix-style-utils');
-                return styleUtils.mirrorStyle(this.target, this);
-            },
-
-            /*
-             * allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
-             */
-            unstick: function () {
-                var elUtils, meta, style, styleUtils;
-                if (this.target == null) {
-                    return;
-                }
-                meta = document.createElement('core-meta');
-                elUtils = meta.byId('matrix-element-utils');
-                elUtils.setShadowZ(this.target, 5);
-                styleUtils = meta.byId('matrix-style-utils');
-                this.target.beginState = styleUtils.copyByValue(this.target);
-                this.target.working = true;
-                style = getComputedStyle(this.target);
-                this.target.style.top = (this.target.offsetTop - (parseInt(style.marginTop) || 0)) + "px";
-                this.target.style.left = (this.target.offsetLeft - (parseInt(style.marginLeft) || 0)) + "px";
-                this.target.style.position = 'absolute';
-                this.target.style.zIndex = 10;
-                this.target.parentNode.insertBefore(this, this.target);
-                return setTimeout((function (_this) {
-                    return function () {
-                        return _this.target.dispatchEvent(new Event('matrixUnstickEnd'));
-                    };
-                })(this), 0);
-            },
-
-            /*
-             * insert the floated card back into the grid, replacing the ghost
-             */
-            stick  : function () {
-                var elUtils, ghost, meta, styleUtils, target;
-                if (this.localName === 'matrix-card') {
-                    target = this;
-    }
-                if (this.localName === 'matrix-ghost') {
-                    target = this.target;
-                }
-                meta = document.createElement('core-meta');
-                elUtils = meta.byId('matrix-element-utils');
-                ghost = target.ghost;
-                styleUtils = meta.byId('matrix-style-utils');
-                styleUtils.mirrorStyle(ghost, target);
-                if (ghost.parentNode != null) {
-                    ghost.parentNode.replaceChild(target, ghost);
-                }
-                target.style.transition = '';
-                target.style.position = target.beginState.position;
-                target.style.zIndex = target.beginState.zIndex;
-                target.style.top = 'auto';
-                target.style.left = 'auto';
-                elUtils.setShadowZ(target, 1);
-                return setTimeout((function (_this) {
-                    return function () {
-                        target.dispatchEvent(new Event('matrixStickEnd'));
-                        return target.working = false;
-                    };
-                })(this), 0);
-            }
-        });
-        </script>
-        <template></template>
-    </polymer-element>
-    <polymer-element name="matrix-card" constructor="MatrixCard" attributes="z" assetpath="matrix-card/">
-        <template>
-            <style shim-shadowdom="">:host {
+<polymer-element name="matrix-toolbar" constructor="MatrixToolbar" assetpath="matrix-toolbar/">
+    <template>
+        <style>
+            :host {
                 display: block;
                 box-sizing: border-box;
             }
-
-            :host([fullsize]) {
-                height: 100%;
-                width: 100%;
+            
+            div {
+                box-sizing: border-box;
             }
-
-            paper-shadow {
-                background-color: transparent;
-                height: 100%;
-                width: 100%;
+            
+            .matrix-toolbar {
+                padding: 20px;
             }
-
+            
             ::content core-icon {
-                pointer-events: none;
+                height: 24px;
+                width: 24px;
+                color: #999;
             }
-            </style>
-            <paper-shadow z="[[z]]" animated="">
-                <template if="{{toolbar}}">
-                    <matrix-toolbar>
-                        <content select="core-icon"></content>
-                        <content select=".toolbar"></content>
-                    </matrix-toolbar>
-                </template>
-                <div class="card-content">
-                    <content></content>
-                </div>
-            </paper-shadow>
-        </template>
-        <script>Polymer('matrix-card', {
-            ready    : function () {
-                var icon, toolbar;
-                this.style.background = this.background;
-                icon = this.querySelector('core-icon');
-                toolbar = this.querySelector('.toolbar');
-                if ((icon != null) || (toolbar != null)) {
-                    return this.toolbar = true;
+        </style>
+        <div class="matrix-toolbar" layout="" horizontal="" center="">
+            <div>
+                <content select="core-icon, img"></content>
+            </div>
+            <div flex="">
+                <content></content>
+            </div>
+        </div>
+    </template>
+<script>Polymer('matrix-toolbar');</script></polymer-element>
+<polymer-element name="matrix-type-utilities" constructor="MatrixTypeUtilities" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    typeUtils = meta.byId('matrix-type-utils')
+ */
+Polymer('matrix-type-utilities', {
+  ready: function() {},
+
+  /*
+   * ensures @value is an instance of @type, optionally throwing an exception if not
+   */
+  typeCheck: function(value, types, throwError) {
+    var type, valueType;
+    if (throwError == null) {
+      throwError = true;
     }
-            },
-            publish  : {
-                transformable: true,
-                fullSizeDims : {},
-                size         : 'base',
-                debug        : null,
-                background   : 'white'
-            },
-            created  : function () {
-            },
-            transform: function (event) {
-            }
-        });
-        </script>
-    </polymer-element>
-    <polymer-element name="matrix-sheet" constructor="MatrixSheet" attributes="size, background, offset, origin" assetpath="matrix-sheet/">
-        <template>
-            <style>:host {
-                display: block;
-                position: absolute;
-                height: 100%;
-                max-height: 100%;
-                width: 100%;
-                box-sizing: border-box;
-                transition: left 0.4s ease-out, right 0.4s ease-out;
-            }
-            </style>
-            <matrix-card class="sheet" fullsize="" z="5" background="[[background]]">
-                <div fit="" layout="" horizontal="" wrap="" style="overflow:scroll;">
-                    <content></content>
-                </div>
-            </matrix-card>
-        </template>
-        <script>Polymer('matrix-sheet', {
-            offset  : '0',
-            size    : '100%',
-            sequence: null,
-            origin  : 'left',
-            ready   : function () {
-                this.style.width = (this.size != null ? "" + this.size : void 0) || '100%';
-                if (this.offset.substr(this.offset.length - 1) === '%') {
-                    this.offset = parseInt(window.innerWidth) * (parseFloat(this.offset) / 100);
-                }
-                if (this.origin != null) {
-                    return this.style[this.origin] = this.offset + "px";
-                }
-            }
-        });
-        </script>
-    </polymer-element>
-    <polymer-element name="matrix-sheet-controller" assetpath="matrix-sheet/">
-        <script>Polymer('matrix-sheet-controller', {
-            publish: {
-                group  : null,
-                minZ   : 100,
-                reverse: true
-            },
-            ready  : function () {
-                var attribute, group, i, index, item, j, k, len, len1, len2, ref, results, scope, selector, sequence, sequenced, set, unsequenced;
-                attribute = (this.group != null ? "[group=" + group + "]" : void 0) || '';
-                selector = "matrix-sheet" + attribute;
-                scope = this.parentNode || document;
-                group = scope.querySelectorAll(selector);
-                if (!(group.length > 0)) {
-                    return;
-                }
-                for (i = 0, len = group.length; i < len; i++) {
-                    item = group[i];
-                    if (item.sequence != null) {
-                        sequenced = item;
+    valueType = Object.prototype.toString.call(value);
+    if (typeof types !== 'string') {
+      types = [types];
+    }
+    if ((function() {
+      var i, len, results;
+      results = [];
+      for (i = 0, len = types.length; i < len; i++) {
+        type = types[i];
+        results.push(valueType.match(new RegExp("/" + type + "/")));
       }
-                }
-                if (sequenced == null) {
-                    sequenced = [];
-                }
-                set = {
-                    items: {},
-                    keys : []
-    };
-                for (j = 0, len1 = sequenced.length; j < len1; j++) {
-                    item = sequenced[j];
-                    sequence = (parseInt(item.sequence) || 0) * 10 + this.minZ;
-                    while (set.items[sequence++] != null) {
-                        continue;
-                    }
-                    set.items[sequence] = item;
-                    set.keys.push(sequence);
+      return results;
+    })()) {
+      return true;
     }
-                sequence = (set.keys.length !== 0 ? Math.max.apply(this, set.keys) : void 0) || this.minZ;
-                unsequenced = (function () {
-                    var k, len2, results;
-                    results = [];
-                    for (k = 0, len2 = group.length; k < len2; k++) {
-                        item = group[k];
-                        if ((item.sequence != null) === false) {
-                            results.push(item);
-        }
-                    }
-                    return results;
-                })();
-                if (unsequenced == null) {
-                    unsequenced = [];
+    if (throwError !== true) {
+      return false;
     }
-                if (this.reverse !== false) {
-                    unsequenced = unsequenced.reverse();
-    }
-                for (k = 0, len2 = unsequenced.length; k < len2; k++) {
-                    item = unsequenced[k];
-                    set.items[++sequence] = item;
-    }
-                ref = set.items;
-                results = [];
-                for (index in ref) {
-                    item = ref[index];
-                    results.push(item.style.zIndex = index);
-                }
-                return results;
-            }
-        });
+    throw new TypeError("expected [object " + (types.join('/')) + "]; provided " + (Object.prototype.toString.call(value)));
+  }
+});
 </script>
-        <template></template>
+    <template></template>
+</polymer-element>
+<matrix-type-utilities id="matrix-type-utils"></matrix-type-utilities><polymer-element name="matrix-style-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    styleUtils = meta.byId('matrix-style-utils')
+ */
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+Polymer('matrix-style-utilities', {
+
+  /*
+   * Applies all computed styles of @model to @target
+  #
+   * Optionally ignore blacklisted styles or only apply whitelisted styles
+   */
+  mirrorStyle: function(model, target, blacklist, whitelist) {
+    var modelStyle, prop, results, targetStyle, typeUtils, value;
+    if (blacklist == null) {
+      blacklist = null;
+    }
+    if (whitelist == null) {
+      whitelist = null;
+    }
+    typeUtils = new MatrixTypeUtilities();
+    typeUtils.typeCheck(model, ['HTMLElement', 'HTMLDivElement']);
+    typeUtils.typeCheck(target, ['HTMLElement', 'HTMLDivElement']);
+    modelStyle = getComputedStyle(model);
+    targetStyle = getComputedStyle(target);
+    if (blacklist == null) {
+      blacklist = ['background', 'transition', 'position'];
+    }
+    if (whitelist == null) {
+      whitelist = ['width', 'height', 'marginLeft', 'marginTop', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'];
+    }
+    results = [];
+    for (prop in modelStyle) {
+      value = modelStyle[prop];
+      if (!(typeof prop === 'string' && indexOf.call(blacklist, prop) < 0 && targetStyle[prop] !== value)) {
+        continue;
+      }
+      if (indexOf.call(whitelist, prop) >= 0) {
+        results.push(target.style[prop] = value);
+      } else {
+        results.push(void 0);
+      }
+    }
+    return results;
+  },
+  copyByValue: function(element) {
+    var cs, key, result, value;
+    cs = getComputedStyle(element);
+    if (cs == null) {
+      return null;
+    }
+    result = {};
+    for (key in cs) {
+      value = cs[key];
+      result[key] = value;
+    }
+    return result;
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<matrix-style-utilities id="matrix-style-utils"></matrix-style-utilities>
+<polymer-element name="matrix-element-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    elUtils = meta.byId('matrix-element-utils')
+ */
+Polymer('matrix-element-utilities', {
+
+  /*
+   * Locate a ghost attached to `element`
+   */
+  findGhost: function(element) {
+    var ghost, ghosts, i, len;
+    ghosts = document.querySelectorAll('matrix-ghost');
+    for (i = 0, len = ghosts.length; i < len; i++) {
+      ghost = ghosts[i];
+      if (ghost.target === element) {
+        return ghost;
+      }
+    }
+    return null;
+  },
+  injectGhost: function(element) {
+    var ghost;
+    ghost = document.createElement('matrix-ghost');
+    return ghost.assign(element);
+  },
+
+  /*
+   * Attempts to apply Polymer z value to all elements in @element shadow DOM
+   */
+  setShadowZ: function(element, value, tagName) {
+    var target;
+    if (tagName == null) {
+      tagName = 'paper-shadow';
+    }
+    if (!(parseInt(value) <= 5)) {
+      return;
+    }
+    if (element.shadowRoot == null) {
+      return;
+    }
+    target = element.shadowRoot.querySelector(tagName);
+    return target != null ? typeof target.setZ === "function" ? target.setZ(value) : void 0 : void 0;
+  }
+});
+</script>
+    <template></template>
+</polymer-element>
+<matrix-element-utilities id="matrix-element-utils"></matrix-element-utilities><polymer-element name="matrix-ghost" constructor="MatrixGhost" assetpath="matrix-ghost/">
+    <script>Polymer('matrix-ghost', {
+  ready: function() {},
+  publish: {
+    target: null,
+    debug: false
+  },
+  assign: function(element) {
+    var meta, styleUtils;
+    this.target = element;
+    element.ghost = this;
+    meta = document.createElement('core-meta');
+    if (this.debug !== false) {
+      this.style.background = "#999";
+    }
+    styleUtils = meta.byId('matrix-style-utils');
+    return styleUtils.mirrorStyle(this.target, this);
+  },
+
+  /*
+   * allow a card to float above the grid, inserting a "ghost" placeholder to maintain its position
+   */
+  unstick: function() {
+    var elUtils, meta, style, styleUtils;
+    if (this.target == null) {
+      return;
+    }
+    meta = document.createElement('core-meta');
+    elUtils = meta.byId('matrix-element-utils');
+    elUtils.setShadowZ(this.target, 5);
+    styleUtils = meta.byId('matrix-style-utils');
+    this.target.beginState = styleUtils.copyByValue(this.target);
+    this.target.working = true;
+    style = getComputedStyle(this.target);
+    this.target.style.top = (this.target.offsetTop - (parseInt(style.marginTop) || 0)) + "px";
+    this.target.style.left = (this.target.offsetLeft - (parseInt(style.marginLeft) || 0)) + "px";
+    this.target.style.position = 'absolute';
+    this.target.style.zIndex = 10;
+    this.target.parentNode.insertBefore(this, this.target);
+    return setTimeout((function(_this) {
+      return function() {
+        return _this.target.dispatchEvent(new Event('matrixUnstickEnd'));
+      };
+    })(this), 0);
+  },
+
+  /*
+   * insert the floated card back into the grid, replacing the ghost
+   */
+  stick: function() {
+    var elUtils, ghost, meta, styleUtils, target;
+    if (this.localName === 'matrix-card') {
+      target = this;
+    }
+    if (this.localName === 'matrix-ghost') {
+      target = this.target;
+    }
+    meta = document.createElement('core-meta');
+    elUtils = meta.byId('matrix-element-utils');
+    ghost = target.ghost;
+    styleUtils = meta.byId('matrix-style-utils');
+    styleUtils.mirrorStyle(ghost, target);
+    if (ghost.parentNode != null) {
+      ghost.parentNode.replaceChild(target, ghost);
+    }
+    target.style.transition = '';
+    target.style.position = target.beginState.position;
+    target.style.zIndex = target.beginState.zIndex;
+    target.style.top = 'auto';
+    target.style.left = 'auto';
+    elUtils.setShadowZ(target, 1);
+    return setTimeout((function(_this) {
+      return function() {
+        target.dispatchEvent(new Event('matrixStickEnd'));
+        return target.working = false;
+      };
+    })(this), 0);
+  }
+});
+</script>
+    <template></template>
+</polymer-element><polymer-element name="matrix-card" constructor="MatrixCard" attributes="z" assetpath="matrix-card/">
+    <template>
+        <style shim-shadowdom="">:host {
+  display: block;
+  box-sizing: border-box; }
+
+:host([fullsize]) {
+  height: 100%;
+  width: 100%; }
+
+paper-shadow {
+  background-color: transparent;
+  height: 100%;
+  width: 100%; }
+
+::content core-icon {
+  pointer-events: none; }
+</style>
+        <paper-shadow z="[[z]]" animated="">
+            <template if="{{toolbar}}">
+                <matrix-toolbar>
+                    <content select="core-icon"></content>
+                    <content select=".toolbar"></content>
+                </matrix-toolbar>
+            </template>
+            <div class="card-content">
+                <content></content>
+            </div>
+        </paper-shadow>
+    </template>
+    <script>Polymer('matrix-card', {
+  ready: function() {
+    var icon, toolbar;
+    this.style.background = this.background;
+    icon = this.querySelector('core-icon');
+    toolbar = this.querySelector('.toolbar');
+    if ((icon != null) || (toolbar != null)) {
+      return this.toolbar = true;
+    }
+  },
+  publish: {
+    transformable: true,
+    fullSizeDims: {},
+    size: 'base',
+    debug: null,
+    background: 'white'
+  },
+  created: function() {},
+  transform: function(event) {}
+});
+</script>
+</polymer-element><polymer-element name="matrix-sheet" constructor="MatrixSheet" attributes="size, background, offset, origin" assetpath="matrix-sheet/">
+    <template>
+        <style>:host {
+  display: block;
+  position: absolute;
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  transition: left 0.4s ease-out, right 0.4s ease-out; }
+</style>
+        <matrix-card class="sheet" fullsize="" z="5" background="[[background]]">
+            <div fit="" layout="" horizontal="" wrap="" style="overflow:scroll;">
+                <content></content>
+            </div>
+        </matrix-card>
+    </template>
+    <script>Polymer('matrix-sheet', {
+  offset: '0',
+  size: '100%',
+  sequence: null,
+  origin: 'left',
+  ready: function() {
+    this.style.width = (this.size != null ? "" + this.size : void 0) || '100%';
+    if (this.offset.substr(this.offset.length - 1) === '%') {
+      this.offset = parseInt(window.innerWidth) * (parseFloat(this.offset) / 100);
+    }
+    if (this.origin != null) {
+      return this.style[this.origin] = this.offset + "px";
+    }
+  }
+});
+</script>
+</polymer-element>
+<polymer-element name="matrix-sheet-controller" assetpath="matrix-sheet/">
+    <script>Polymer('matrix-sheet-controller', {
+  publish: {
+    group: null,
+    minZ: 100,
+    reverse: true
+  },
+  ready: function() {
+    var attribute, group, i, index, item, j, k, len, len1, len2, ref, results, scope, selector, sequence, sequenced, set, unsequenced;
+    attribute = (this.group != null ? "[group=" + group + "]" : void 0) || '';
+    selector = "matrix-sheet" + attribute;
+    scope = this.parentNode || document;
+    group = scope.querySelectorAll(selector);
+    if (!(group.length > 0)) {
+      return;
+    }
+    for (i = 0, len = group.length; i < len; i++) {
+      item = group[i];
+      if (item.sequence != null) {
+        sequenced = item;
+      }
+    }
+    if (sequenced == null) {
+      sequenced = [];
+    }
+    set = {
+      items: {},
+      keys: []
+    };
+    for (j = 0, len1 = sequenced.length; j < len1; j++) {
+      item = sequenced[j];
+      sequence = (parseInt(item.sequence) || 0) * 10 + this.minZ;
+      while (set.items[sequence++] != null) {
+        continue;
+      }
+      set.items[sequence] = item;
+      set.keys.push(sequence);
+    }
+    sequence = (set.keys.length !== 0 ? Math.max.apply(this, set.keys) : void 0) || this.minZ;
+    unsequenced = (function() {
+      var k, len2, results;
+      results = [];
+      for (k = 0, len2 = group.length; k < len2; k++) {
+        item = group[k];
+        if ((item.sequence != null) === false) {
+          results.push(item);
+        }
+      }
+      return results;
+    })();
+    if (unsequenced == null) {
+      unsequenced = [];
+    }
+    if (this.reverse !== false) {
+      unsequenced = unsequenced.reverse();
+    }
+    for (k = 0, len2 = unsequenced.length; k < len2; k++) {
+      item = unsequenced[k];
+      set.items[++sequence] = item;
+    }
+    ref = set.items;
+    results = [];
+    for (index in ref) {
+      item = ref[index];
+      results.push(item.style.zIndex = index);
+    }
+    return results;
+  }
+});
+</script>
+    <template></template>
 </polymer-element>
 <polymer-element name="core-iconset" extends="core-meta" attributes="src width icons iconSize" assetpath="../../vendor/bower_components/core-iconset/">
   
@@ -1672,87 +1662,86 @@ html /deep/ core-icon {
 </defs></svg>
 </core-iconset-svg>
 
-    <polymer-element name="matrix-grid-utilities" extends="core-meta" assetpath="matrix-utilities/">
-        <script>
-            /*
-             GET INSTANCE
-             meta = document.createElement('core-meta')
-             gridUtils = meta.byId('matrix-grid-utils')
-             */
-            Polymer('matrix-grid-utilities', {
-                pixelsToEdge      : function (element) {
-                    var elementStyle, gridStyle, pixelsToEdge, usefulWidth, widthThroughElement;
-                    gridStyle = getComputedStyle(element.parentNode);
-                    elementStyle = getComputedStyle(element);
-                    usefulWidth = parseFloat(gridStyle.width) - (parseFloat(gridStyle.paddingLeft) || 0) - (parseFloat(gridStyle.paddingRight) || 0);
-                    widthThroughElement = element.offsetLeft + element.offsetWidth + (parseFloat(elementStyle.marginLeft) || 0);
-                    pixelsToEdge = usefulWidth - widthThroughElement;
-                    return pixelsToEdge;
-                },
-                nextAvailableTop  : function (element) {
-                    var elementStyle, marginTop, offsetHeight, offsetTop;
-                    elementStyle = getComputedStyle(element);
-                    offsetTop = parseFloat(element.offsetTop) || 0;
-                    offsetHeight = parseFloat(element.offsetHeight) || 0;
-                    marginTop = parseFloat(elementStyle.marginTop) || 0;
-                    if (this.leftOffset(element) === 0) {
-                        return offsetTop - marginTop;
-                    }
-                    return offsetTop + offsetHeight;
-                },
-                marginCompensation: function (element) {
-                    var items, remainder;
-                    items = this.leftOffset(element) + this.rightOffset(element);
-                    remainder = (!(this.leftOffset(element) === 0 || this.rightOffset(element) === 0) ? this.rightOffset(element) / items : void 0) || 0;
-                    return remainder * parseFloat(element.offsetHeight);
-                },
-
-                /*
-                 * worker method for rightOffset and leftOffset
-                 */
-                rowOffset         : function (element, direction) {
-                    var neighbor;
-                    neighbor = element[direction + "ElementSibling"];
-                    if (neighbor == null) {
-                        return 0;
-                    }
-                    if (!(neighbor.localName === element.localName || neighbor.localName === 'matrix-card' || neighbor.className === 'matrix-ghost')) {
-                        return 0;
-                    }
-                    if (neighbor.style.position === 'absolute') {
-                        return this.rowOffset.apply(this, [neighbor, direction]);
-                    }
-                    if (neighbor.size === 'expanded') {
-                        return 0;
-                    }
-                    if (element.offsetLeft <= neighbor.offsetLeft && direction === 'previous') {
-                        return 0;
-                    }
-                    if (element.offsetLeft >= neighbor.offsetLeft && direction === 'next') {
-                        return 0;
-                    }
-                    return this.rowOffset.apply(this, [neighbor, direction]) + 1;
-                },
-
-                /*
-                 * returns the number of elements preceding @element in the current row
-                 */
-                leftOffset        : function (element) {
-                    return this.rowOffset(element, 'previous');
+<polymer-element name="matrix-grid-utilities" extends="core-meta" assetpath="matrix-utilities/">
+    <script>
+/*
+  GET INSTANCE
+    meta = document.createElement('core-meta')
+    gridUtils = meta.byId('matrix-grid-utils')
+ */
+Polymer('matrix-grid-utilities', {
+  pixelsToEdge: function(element) {
+    var elementStyle, gridStyle, pixelsToEdge, usefulWidth, widthThroughElement;
+    gridStyle = getComputedStyle(element.parentNode);
+    elementStyle = getComputedStyle(element);
+    usefulWidth = parseFloat(gridStyle.width) - (parseFloat(gridStyle.paddingLeft) || 0) - (parseFloat(gridStyle.paddingRight) || 0);
+    widthThroughElement = element.offsetLeft + element.offsetWidth + (parseFloat(elementStyle.marginLeft) || 0);
+    pixelsToEdge = usefulWidth - widthThroughElement;
+    return pixelsToEdge;
+  },
+  nextAvailableTop: function(element) {
+    var elementStyle, marginTop, offsetHeight, offsetTop;
+    elementStyle = getComputedStyle(element);
+    offsetTop = parseFloat(element.offsetTop) || 0;
+    offsetHeight = parseFloat(element.offsetHeight) || 0;
+    marginTop = parseFloat(elementStyle.marginTop) || 0;
+    if (this.leftOffset(element) === 0) {
+      return offsetTop - marginTop;
+    }
+    return offsetTop + offsetHeight;
+  },
+  marginCompensation: function(element) {
+    var items, remainder;
+    items = this.leftOffset(element) + this.rightOffset(element);
+    remainder = (!(this.leftOffset(element) === 0 || this.rightOffset(element) === 0) ? this.rightOffset(element) / items : void 0) || 0;
+    return remainder * parseFloat(element.offsetHeight);
   },
 
-                /*
-                 * returns the number of elements following @element in the current row
-                 */
-                rightOffset       : function (element) {
-                    return this.rowOffset(element, 'next');
-                }
+  /*
+   * worker method for rightOffset and leftOffset
+   */
+  rowOffset: function(element, direction) {
+    var neighbor;
+    neighbor = element[direction + "ElementSibling"];
+    if (neighbor == null) {
+      return 0;
+    }
+    if (!(neighbor.localName === element.localName || neighbor.localName === 'matrix-card' || neighbor.className === 'matrix-ghost')) {
+      return 0;
+    }
+    if (neighbor.style.position === 'absolute') {
+      return this.rowOffset.apply(this, [neighbor, direction]);
+    }
+    if (neighbor.size === 'expanded') {
+      return 0;
+    }
+    if (element.offsetLeft <= neighbor.offsetLeft && direction === 'previous') {
+      return 0;
+    }
+    if (element.offsetLeft >= neighbor.offsetLeft && direction === 'next') {
+      return 0;
+    }
+    return this.rowOffset.apply(this, [neighbor, direction]) + 1;
+  },
+
+  /*
+   * returns the number of elements preceding @element in the current row
+   */
+  leftOffset: function(element) {
+    return this.rowOffset(element, 'previous');
+  },
+
+  /*
+   * returns the number of elements following @element in the current row
+   */
+  rightOffset: function(element) {
+    return this.rowOffset(element, 'next');
+  }
 });
 </script>
-        <template></template>
+    <template></template>
 </polymer-element>
-    <matrix-grid-utilities id="matrix-grid-utils"></matrix-grid-utilities>
-    <polymer-element name="matrix-floating-transform" constructor="MatrixFloatingTransform" assetpath="matrix-transitions/">
+<matrix-grid-utilities id="matrix-grid-utils"></matrix-grid-utilities><polymer-element name="matrix-floating-transform" constructor="MatrixFloatingTransform" assetpath="matrix-transitions/">
     <script>Polymer('matrix-floating-transform', {
 
   /*
@@ -1760,11 +1749,11 @@ html /deep/ core-icon {
    * a ghost element
    */
   grow: function(event) {
-      var dims, element, elementTop, ghost, gridUtils, marginComp, meta, styleUtils, toEdge, transformer;
+    var dims, element, elementTop, ghost, gridUtils, marginComp, meta, styleUtils, toEdge, transformer;
     element = event.target;
     dims = (element != null ? element.fullSizeDims : void 0) || {};
     meta = document.createElement('core-meta');
-      ghost = element.ghost;
+    ghost = element.ghost;
     if (ghost == null) {
       return;
     }
@@ -1809,45 +1798,45 @@ html /deep/ core-icon {
       }, {}
     ];
     transformer = new MatrixFloatingTransform();
-      if (element.keyframeTransition == null) {
-          element.keyframeTransition = transformer.keyframeTransition;
-      }
-      if (ghost.keyframeTransition == null) {
-          ghost.keyframeTransition = transformer.keyframeTransition;
-      }
+    if (element.keyframeTransition == null) {
+      element.keyframeTransition = transformer.keyframeTransition;
+    }
+    if (ghost.keyframeTransition == null) {
+      ghost.keyframeTransition = transformer.keyframeTransition;
+    }
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
     ghost.keyframeTransition(ghost);
     element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
     element.keyframeTransition(element);
     element.size = 'expanded';
   },
-        shrinkAlone: function (element) {
-            var transformer;
-            element.keyframeStack = [
-                {
-                    transition: "0.5s all ease-in",
-                    width     : element.fromStyle.width,
-                    height    : element.fromStyle.height,
-                    marginLeft: element.fromStyle.marginLeft
-                }
-            ];
-            transformer = new MatrixFloatingTransform();
-            if (element.keyframeTransition == null) {
-                element.keyframeTransition = transformer.keyframeTransition;
-            }
-            element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
-            element.keyframeTransition(element);
-            return element.size = 'base';
-        },
+  shrinkAlone: function(element) {
+    var transformer;
+    element.keyframeStack = [
+      {
+        transition: "0.5s all ease-in",
+        width: element.fromStyle.width,
+        height: element.fromStyle.height,
+        marginLeft: element.fromStyle.marginLeft
+      }
+    ];
+    transformer = new MatrixFloatingTransform();
+    if (element.keyframeTransition == null) {
+      element.keyframeTransition = transformer.keyframeTransition;
+    }
+    element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
+    element.keyframeTransition(element);
+    return element.size = 'base';
+  },
 
   /*
    * Returns an element to its base size
    */
   shrink: function(event) {
-      var available, col, element, fullWidth, ghost, isFirst, left, meta, prev, ref, top, transformer;
+    var available, col, element, fullWidth, ghost, isFirst, left, meta, prev, ref, top, transformer;
     element = event.target;
     meta = document.createElement('core-meta');
-      ghost = element.ghost;
+    ghost = element.ghost;
     if (ghost == null) {
       return;
     }
@@ -1880,7 +1869,7 @@ html /deep/ core-icon {
     }
     ghost.keyframeStack = [
       {
-          transition: '0.5s all linear',
+        transition: '0.5s all linear',
         width: element.fromStyle.width,
         height: element.fromStyle.height,
         marginLeft: element.fromStyle.marginLeft,
@@ -1892,20 +1881,20 @@ html /deep/ core-icon {
         transition: "0.7s all ease-in",
         width: element.fromStyle.width,
         height: element.fromStyle.height,
-          marginLeft: element.fromStyle.marginLeft
+        marginLeft: element.fromStyle.marginLeft
       }, {
         transition: '',
-            top: '0px',
+        top: '0px',
         left: "0px"
       }
     ];
     transformer = new MatrixFloatingTransform();
-      if (element.keyframeTransition == null) {
-          element.keyframeTransition = transformer.keyframeTransition;
-      }
-      if (ghost.keyframeTransition == null) {
-          ghost.keyframeTransition = transformer.keyframeTransition;
-      }
+    if (element.keyframeTransition == null) {
+      element.keyframeTransition = transformer.keyframeTransition;
+    }
+    if (ghost.keyframeTransition == null) {
+      ghost.keyframeTransition = transformer.keyframeTransition;
+    }
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
     ghost.keyframeTransition(ghost);
     element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
@@ -1926,24 +1915,24 @@ html /deep/ core-icon {
     if (event == null) {
       event = null;
     }
-      if (event.localName != null) {
-          if (event.localName === 'matrix-card') {
-              element = event;
-          }
-          if (event.localName === 'matrix-ghost') {
-              element = event;
-          }
+    if (event.localName != null) {
+      if (event.localName === 'matrix-card') {
+        element = event;
+      }
+      if (event.localName === 'matrix-ghost') {
+        element = event;
+      }
     }
     if (element == null) {
       element = (Object.prototype.toString.call(event) === "[object TransitionEvent]" ? event != null ? event.target : void 0 : void 0);
     }
     if (element == null) {
-        return;
+      return;
     }
-      if ((ref = element.localName) !== 'matrix-card' && ref !== 'matrix-ghost') {
-          return console.log('bullshit element', element);
-      }
-      if (element == null) {
+    if ((ref = element.localName) !== 'matrix-card' && ref !== 'matrix-ghost') {
+      return console.log('bullshit element', element);
+    }
+    if (element == null) {
       return console.log('Unable to find element', event);
     }
     if (!(element.keyframeStack instanceof Array)) {
@@ -1953,9 +1942,9 @@ html /deep/ core-icon {
       if (element.activeKeyframe != null) {
         delete element.activeKeyframe;
       }
-        if (element.keyframeStack != null) {
-            delete element.keyframeStack;
-        }
+      if (element.keyframeStack != null) {
+        delete element.keyframeStack;
+      }
       element.dispatchEvent(new Event('matrixScaleEnd'));
       element.removeEventListener('webkitTransitionEnd', element.keyframeTransition);
     }
@@ -1981,9 +1970,9 @@ html /deep/ core-icon {
     if (Object.keys(element.activeKeyframe).length !== 0) {
       return;
     }
-      if (element.keyframeStack == null) {
-          return;
-      }
+    if (element.keyframeStack == null) {
+      return;
+    }
     element.activeKeyframe = element.keyframeStack.shift();
     computedStyle = getComputedStyle(element);
     meta = document.createElement('core-meta');
@@ -2001,54 +1990,50 @@ html /deep/ core-icon {
       }
     }
     if (Object.keys(element.activeKeyframe).length === 0) {
-        return element.keyframeTransition(element);
+      return element.keyframeTransition(element);
     }
   }
 });
 </script>
     <template></template>
-    </polymer-element>
-    <polymer-element name="matrix-card-collection" constructor="MatrixCardCollection" attributes="cards" assetpath="matrix-card-collection/">
+</polymer-element><polymer-element name="matrix-card-collection" constructor="MatrixCardCollection" attributes="cards" assetpath="matrix-card-collection/">
     <template>
         <style>:host {
-            padding: 15px 0;
-        }
+  padding: 15px 0; }
 
-        matrix-card {
-            height: 200px;
-            width: 200px;
-            margin-bottom: 20px;
-            transition: all 0.5s linear;
-        }
+matrix-card {
+  height: 200px;
+  width: 200px;
+  margin-bottom: 20px;
+  transition: all 0.5s linear; }
 </style>
         <div horizontal="" layout="" around-justified="" wrap="">
             <template repeat="{{card in cards}}">
                 <matrix-card relative="" class="card" id="card{{card.value}}" fullsizedims="{{card.dims}}" z="1" on-click="{{transform}}">
                     <core-icon icon="{{card.icon}}"></core-icon>
-                    <h2>{{card.value}}</h2></matrix-card>
+                    <h2>{{card.value}}</h2> </matrix-card>
             </template>
         </div>
     </template>
-        <script>Polymer('matrix-card-collection', {
-            ready    : function () {
-            },
-            transform: function (event, detail, sender) {
-                var element, ghost, meta, transformer;
-                element = event.target;
-                $(element).off('matrixUnstickEnd matrixScaleEnd');
-                meta = document.querySelector('core-meta');
-                transformer = new MatrixFloatingTransform();
-                element.transformer = transformer;
-                if (element.size === 'base') {
-                    ghost = new MatrixGhost();
-                    ghost.assign(element);
-                    ghost.unstick();
-                    element.addEventListener('matrixUnstickEnd', element.transformer.grow);
-                    element.addEventListener('matrixScaleEnd', element.ghost.stick);
+    <script>Polymer('matrix-card-collection', {
+  ready: function() {},
+  transform: function(event, detail, sender) {
+    var element, ghost, meta, transformer;
+    element = event.target;
+    $(element).off('matrixUnstickEnd matrixScaleEnd');
+    meta = document.querySelector('core-meta');
+    transformer = new MatrixFloatingTransform();
+    element.transformer = transformer;
+    if (element.size === 'base') {
+      ghost = new MatrixGhost();
+      ghost.assign(element);
+      ghost.unstick();
+      element.addEventListener('matrixUnstickEnd', element.transformer.grow);
+      element.addEventListener('matrixScaleEnd', element.ghost.stick);
       return;
     }
-                if (element.size === 'expanded') {
-                    element.transformer.shrinkAlone(element);
+    if (element.size === 'expanded') {
+      element.transformer.shrinkAlone(element);
     }
   }
 });

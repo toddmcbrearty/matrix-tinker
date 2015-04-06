@@ -15,7 +15,7 @@ Polymer 'matrix-card-collection',
     transformer = new MatrixFloatingTransform()
 
   #    element.appendChild(transformer)
-  element.transformer = transformer
+    element.transformer = transformer
 
     if element.size is 'base'
       ghost = new MatrixGhost()
@@ -29,5 +29,5 @@ Polymer 'matrix-card-collection',
 #      ghost.unstick()
 #      element.addEventListener 'matrixUnstickEnd', transformer.shrink
 #      element.addEventListener 'matrixScaleEnd', ghost.stick
-    element.transformer.shrinkAlone(element)
+      element.transformer.shrinkAlone(element)
       return

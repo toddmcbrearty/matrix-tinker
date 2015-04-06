@@ -1,7 +1,6 @@
 :host {
   display: block;
-    box-sizing: border-box;
-}
+  box-sizing: border-box; }
 
 :host([fullsize]) {
   height: 100%;
@@ -13,5 +12,4 @@ paper-shadow {
   width: 100%; }
 
 ::content core-icon {
-    pointer-events: none;
-}
+  pointer-events: none; }

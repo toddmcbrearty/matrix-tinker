@@ -28,28 +28,28 @@ model = (function() {
 })();
 
 list = [
-    {
-        title: 'Author',
-        body : 'Foobarious Fizz, Esq.'
-    }, {
-        title: 'Document Name',
-        body : 'Foo bar baz fizz: what do we really know?'
-    }, {
-        title: 'Document Type',
-        body : 'Contract'
-    }, {
-        title: 'Effective Date',
-        body : 'Unknown',
-        icon : 'warning'
-    }, {
-        title: 'Note',
-        body : 'Now THIS is a note'
-    }
+  {
+    title: 'Author',
+    body: 'Foobarious Fizz, Esq.'
+  }, {
+    title: 'Document Name',
+    body: 'Foo bar baz fizz: what do we really know?'
+  }, {
+    title: 'Document Type',
+    body: 'Contract'
+  }, {
+    title: 'Effective Date',
+    body: 'Unknown',
+    icon: 'warning'
+  }, {
+    title: 'Note',
+    body: 'Now THIS is a note'
+  }
 ];
 
 document.addEventListener('polymer-ready', function() {
-    var matrix;
-    matrix = new Matrix(model, list);
+  var matrix;
+  matrix = new Matrix(model, list);
   return matrix.display();
 });
 
@@ -60,14 +60,14 @@ $(document).keyup(function(event) {
 });
 
 Matrix = (function() {
-    function Matrix(data, list1) {
+  function Matrix(data, list1) {
     this.data = data;
-        this.list = list1;
+    this.list = list1;
   }
 
   Matrix.prototype.display = function() {
-      document.querySelector('#test-card-collection').cards = this.data;
-      return document.querySelector('#test-bound-list').items = this.list;
+    document.querySelector('#test-card-collection').cards = this.data;
+    return document.querySelector('#test-bound-list').items = this.list;
   };
 
   return Matrix;

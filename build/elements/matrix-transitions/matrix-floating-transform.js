@@ -5,11 +5,11 @@ Polymer('matrix-floating-transform', {
    * a ghost element
    */
   grow: function(event) {
-      var dims, element, elementTop, ghost, gridUtils, marginComp, meta, styleUtils, toEdge, transformer;
+    var dims, element, elementTop, ghost, gridUtils, marginComp, meta, styleUtils, toEdge, transformer;
     element = event.target;
     dims = (element != null ? element.fullSizeDims : void 0) || {};
     meta = document.createElement('core-meta');
-      ghost = element.ghost;
+    ghost = element.ghost;
     if (ghost == null) {
       return;
     }
@@ -54,45 +54,45 @@ Polymer('matrix-floating-transform', {
       }, {}
     ];
     transformer = new MatrixFloatingTransform();
-      if (element.keyframeTransition == null) {
-          element.keyframeTransition = transformer.keyframeTransition;
-      }
-      if (ghost.keyframeTransition == null) {
-          ghost.keyframeTransition = transformer.keyframeTransition;
-      }
+    if (element.keyframeTransition == null) {
+      element.keyframeTransition = transformer.keyframeTransition;
+    }
+    if (ghost.keyframeTransition == null) {
+      ghost.keyframeTransition = transformer.keyframeTransition;
+    }
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
     ghost.keyframeTransition(ghost);
     element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
     element.keyframeTransition(element);
     element.size = 'expanded';
   },
-    shrinkAlone: function (element) {
-        var transformer;
-        element.keyframeStack = [
-            {
-                transition: "0.5s all ease-in",
-                width     : element.fromStyle.width,
-                height    : element.fromStyle.height,
-                marginLeft: element.fromStyle.marginLeft
-            }
-        ];
-        transformer = new MatrixFloatingTransform();
-        if (element.keyframeTransition == null) {
-            element.keyframeTransition = transformer.keyframeTransition;
-        }
-        element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
-        element.keyframeTransition(element);
-        return element.size = 'base';
-    },
+  shrinkAlone: function(element) {
+    var transformer;
+    element.keyframeStack = [
+      {
+        transition: "0.5s all ease-in",
+        width: element.fromStyle.width,
+        height: element.fromStyle.height,
+        marginLeft: element.fromStyle.marginLeft
+      }
+    ];
+    transformer = new MatrixFloatingTransform();
+    if (element.keyframeTransition == null) {
+      element.keyframeTransition = transformer.keyframeTransition;
+    }
+    element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
+    element.keyframeTransition(element);
+    return element.size = 'base';
+  },
 
   /*
    * Returns an element to its base size
    */
   shrink: function(event) {
-      var available, col, element, fullWidth, ghost, isFirst, left, meta, prev, ref, top, transformer;
+    var available, col, element, fullWidth, ghost, isFirst, left, meta, prev, ref, top, transformer;
     element = event.target;
     meta = document.createElement('core-meta');
-      ghost = element.ghost;
+    ghost = element.ghost;
     if (ghost == null) {
       return;
     }
@@ -125,7 +125,7 @@ Polymer('matrix-floating-transform', {
     }
     ghost.keyframeStack = [
       {
-          transition: '0.5s all linear',
+        transition: '0.5s all linear',
         width: element.fromStyle.width,
         height: element.fromStyle.height,
         marginLeft: element.fromStyle.marginLeft,
@@ -137,20 +137,20 @@ Polymer('matrix-floating-transform', {
         transition: "0.7s all ease-in",
         width: element.fromStyle.width,
         height: element.fromStyle.height,
-          marginLeft: element.fromStyle.marginLeft
+        marginLeft: element.fromStyle.marginLeft
       }, {
         transition: '',
-            top: '0px',
+        top: '0px',
         left: "0px"
       }
     ];
     transformer = new MatrixFloatingTransform();
-      if (element.keyframeTransition == null) {
-          element.keyframeTransition = transformer.keyframeTransition;
-      }
-      if (ghost.keyframeTransition == null) {
-          ghost.keyframeTransition = transformer.keyframeTransition;
-      }
+    if (element.keyframeTransition == null) {
+      element.keyframeTransition = transformer.keyframeTransition;
+    }
+    if (ghost.keyframeTransition == null) {
+      ghost.keyframeTransition = transformer.keyframeTransition;
+    }
     ghost.addEventListener('webkitTransitionEnd', ghost.keyframeTransition);
     ghost.keyframeTransition(ghost);
     element.addEventListener('webkitTransitionEnd', element.keyframeTransition);
@@ -171,24 +171,24 @@ Polymer('matrix-floating-transform', {
     if (event == null) {
       event = null;
     }
-      if (event.localName != null) {
-          if (event.localName === 'matrix-card') {
-              element = event;
-          }
-          if (event.localName === 'matrix-ghost') {
-              element = event;
-          }
+    if (event.localName != null) {
+      if (event.localName === 'matrix-card') {
+        element = event;
+      }
+      if (event.localName === 'matrix-ghost') {
+        element = event;
+      }
     }
     if (element == null) {
       element = (Object.prototype.toString.call(event) === "[object TransitionEvent]" ? event != null ? event.target : void 0 : void 0);
     }
     if (element == null) {
-        return;
+      return;
     }
-      if ((ref = element.localName) !== 'matrix-card' && ref !== 'matrix-ghost') {
-          return console.log('bullshit element', element);
-      }
-      if (element == null) {
+    if ((ref = element.localName) !== 'matrix-card' && ref !== 'matrix-ghost') {
+      return console.log('bullshit element', element);
+    }
+    if (element == null) {
       return console.log('Unable to find element', event);
     }
     if (!(element.keyframeStack instanceof Array)) {
@@ -198,9 +198,9 @@ Polymer('matrix-floating-transform', {
       if (element.activeKeyframe != null) {
         delete element.activeKeyframe;
       }
-        if (element.keyframeStack != null) {
-            delete element.keyframeStack;
-        }
+      if (element.keyframeStack != null) {
+        delete element.keyframeStack;
+      }
       element.dispatchEvent(new Event('matrixScaleEnd'));
       element.removeEventListener('webkitTransitionEnd', element.keyframeTransition);
     }
@@ -226,9 +226,9 @@ Polymer('matrix-floating-transform', {
     if (Object.keys(element.activeKeyframe).length !== 0) {
       return;
     }
-      if (element.keyframeStack == null) {
-          return;
-      }
+    if (element.keyframeStack == null) {
+      return;
+    }
     element.activeKeyframe = element.keyframeStack.shift();
     computedStyle = getComputedStyle(element);
     meta = document.createElement('core-meta');
@@ -246,7 +246,7 @@ Polymer('matrix-floating-transform', {
       }
     }
     if (Object.keys(element.activeKeyframe).length === 0) {
-        return element.keyframeTransition(element);
+      return element.keyframeTransition(element);
     }
   }
 });

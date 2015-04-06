@@ -7,7 +7,7 @@ Polymer('matrix-ghost', {
   assign: function(element) {
     var meta, styleUtils;
     this.target = element;
-      element.ghost = this;
+    element.ghost = this;
     meta = document.createElement('core-meta');
     if (this.debug !== false) {
       this.style.background = "#999";
@@ -34,7 +34,7 @@ Polymer('matrix-ghost', {
     this.target.style.top = (this.target.offsetTop - (parseInt(style.marginTop) || 0)) + "px";
     this.target.style.left = (this.target.offsetLeft - (parseInt(style.marginLeft) || 0)) + "px";
     this.target.style.position = 'absolute';
-      this.target.style.zIndex = 10;
+    this.target.style.zIndex = 10;
     this.target.parentNode.insertBefore(this, this.target);
     return setTimeout((function(_this) {
       return function() {
@@ -56,17 +56,17 @@ Polymer('matrix-ghost', {
     }
     meta = document.createElement('core-meta');
     elUtils = meta.byId('matrix-element-utils');
-      ghost = target.ghost;
+    ghost = target.ghost;
     styleUtils = meta.byId('matrix-style-utils');
     styleUtils.mirrorStyle(ghost, target);
-      if (ghost.parentNode != null) {
-          ghost.parentNode.replaceChild(target, ghost);
-      }
+    if (ghost.parentNode != null) {
+      ghost.parentNode.replaceChild(target, ghost);
+    }
     target.style.transition = '';
-      target.style.position = target.beginState.position;
-      target.style.zIndex = target.beginState.zIndex;
-      target.style.top = 'auto';
-      target.style.left = 'auto';
+    target.style.position = target.beginState.position;
+    target.style.zIndex = target.beginState.zIndex;
+    target.style.top = 'auto';
+    target.style.left = 'auto';
     elUtils.setShadowZ(target, 1);
     return setTimeout((function(_this) {
       return function() {
