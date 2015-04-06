@@ -190,6 +190,8 @@ gulp.task 'watch', ->
   gulp.watch path.resolve("#{config.src}/main/**/*.coffee"), ['rebuild-coffee']
   gulp.watch path.resolve("#{config.src}/main/**/*.html"), ['rebuild-coffee']
 
+  gulp.run 'serve' if serve
+
 
 # BrowserSync server
 gulp.task 'serve', ->

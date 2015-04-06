@@ -21,7 +21,7 @@ Polymer('matrix-sheet-controller', {
     }
         if (sequenced == null) {
             sequenced = [];
-        }
+    }
         set = {
             items: {},
             keys : []

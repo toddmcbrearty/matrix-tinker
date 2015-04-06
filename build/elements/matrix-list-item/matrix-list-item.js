@@ -1,6 +1,6 @@
 Polymer('matrix-list-item', {
     created: function () {
-        var body, el, icon, meta, stringUtils, title;
+        var base, base1, body, el, icon, meta, stringUtils, title;
         if (this.data == null) {
             this.data = {};
     }
@@ -9,7 +9,7 @@ Polymer('matrix-list-item', {
             if (title != null) {
                 this.data.title = title.innerText;
             }
-        }
+    }
         if (this.data.body == null) {
             body = (function () {
                 var i, len, ref, results;
@@ -29,7 +29,11 @@ Polymer('matrix-list-item', {
     }
         if (this.data.icon == null) {
             icon = this.querySelector('core-icon');
-            return this.data.icon = icon != null ? icon.getAttribute('icon') : void 0;
+            this.data.icon = icon != null ? icon.getAttribute('icon') : void 0;
         }
+        if ((base = this.data).name == null) {
+            base.name = '';
+        }
+        return (base1 = this.data).label != null ? base1.label : base1.label = '';
     }
 });

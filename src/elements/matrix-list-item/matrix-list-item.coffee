@@ -16,3 +16,7 @@ Polymer 'matrix-list-item',
     unless @data.icon?
       icon = @querySelector('core-icon')
       @data.icon = icon?.getAttribute('icon')
+
+    @data.name ?= ''
+    @data.label ?= ''
+

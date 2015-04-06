@@ -66,7 +66,7 @@ Polymer 'matrix-ghost',
     styleUtils.mirrorStyle(ghost, target)
 
     # replace ghost with element and return element positioning to 'relative'
-    ghost.parentNode.replaceChild(target, ghost)
+    ghost.parentNode.replaceChild(target, ghost) if ghost.parentNode?
     target.style.transition = ''
     target.style.position = target.beginState.position
     target.style.zIndex = target.beginState.zIndex

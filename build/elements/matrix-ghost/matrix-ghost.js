@@ -59,7 +59,9 @@ Polymer('matrix-ghost', {
       ghost = target.ghost;
     styleUtils = meta.byId('matrix-style-utils');
     styleUtils.mirrorStyle(ghost, target);
-    ghost.parentNode.replaceChild(target, ghost);
+      if (ghost.parentNode != null) {
+          ghost.parentNode.replaceChild(target, ghost);
+      }
     target.style.transition = '';
       target.style.position = target.beginState.position;
       target.style.zIndex = target.beginState.zIndex;

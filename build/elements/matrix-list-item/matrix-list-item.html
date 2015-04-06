@@ -1,4 +1,5 @@
 <link rel="import" href="../matrix-utilities/matrix-string-utilities.html">
+<link rel="import" href="../matrix-input/matrix-input.html">
 <polymer-element name="matrix-list-item" constructor="MatrixItem" attributes="data">
     <template>
         <link href="matrix-list-item.css" rel="stylesheet" shim-shadowdom>
@@ -13,7 +14,9 @@
                     <template if="{{data.title}}">
                         <div class="list-item-title">{{data.title}}</div>
                     </template>
-                    <div flex class="list-item-body">{{data.body}}</div>
+                    <div flex class="list-item-body">
+                        <matrix-input name="{{data.name}}" value="{{data.body}}"></matrix-input>
+                    </div>
                 </div>
             </div>
         </div>

@@ -7,17 +7,17 @@ Polymer('matrix-card-collection', {
         $(element).off('matrixUnstickEnd matrixScaleEnd');
         meta = document.querySelector('core-meta');
         transformer = new MatrixFloatingTransform();
-        element.appendChild(transformer);
+        element.transformer = transformer;
         if (element.size === 'base') {
             ghost = new MatrixGhost();
             ghost.assign(element);
             ghost.unstick();
-            $(element).on('matrixUnstickEnd', transformer.grow);
-            $(element).on('matrixScaleEnd', ghost.stick);
+            element.addEventListener('matrixUnstickEnd', element.transformer.grow);
+            element.addEventListener('matrixScaleEnd', element.ghost.stick);
             return;
     }
         if (element.size === 'expanded') {
-            transformer.shrinkAlone(element);
-        }
+            element.transformer.shrinkAlone(element);
+    }
     }
 });

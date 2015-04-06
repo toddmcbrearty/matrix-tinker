@@ -5,6 +5,7 @@ Polymer 'matrix-card-collection',
     element = event.target
 
     # turn off any lingering events
+  #    matrix.removeEventListener 'matrixUnstickEnd'
     $(element).off('matrixUnstickEnd matrixScaleEnd')
 
     # initialize a new ghost
@@ -12,19 +13,21 @@ Polymer 'matrix-card-collection',
 
     # initialize a new transition element and place it in the DOM
     transformer = new MatrixFloatingTransform()
-    element.appendChild(transformer)
+
+  #    element.appendChild(transformer)
+  element.transformer = transformer
 
     if element.size is 'base'
       ghost = new MatrixGhost()
       ghost.assign(element)
       ghost.unstick()
-      $(element).on 'matrixUnstickEnd', transformer.grow
-      $(element).on 'matrixScaleEnd', ghost.stick
+      element.addEventListener 'matrixUnstickEnd', element.transformer.grow
+      element.addEventListener 'matrixScaleEnd', element.ghost.stick
       return
 
     if element.size is 'expanded'
 #      ghost.unstick()
-#      $(element).on 'matrixUnstickEnd', transformer.shrink
-#      $(element).on 'matrixScaleEnd', ghost.stick
-      transformer.shrinkAlone(element)
+#      element.addEventListener 'matrixUnstickEnd', transformer.shrink
+#      element.addEventListener 'matrixScaleEnd', ghost.stick
+    element.transformer.shrinkAlone(element)
       return
