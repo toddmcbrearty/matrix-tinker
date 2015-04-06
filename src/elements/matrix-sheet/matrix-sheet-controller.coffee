@@ -35,7 +35,9 @@ Polymer 'matrix-sheet-controller',
     set.items[++sequence] = item for item in unsequenced
 
     # iterate over re-sequenced list, applying z-index values
-    item.style.zIndex = index for index, item of set.items
+    for index, item of set.items
+      scope.removeChild(item)
+      @parentNode.insertBefore(item, this)
 
 
 

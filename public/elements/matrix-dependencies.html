@@ -352,9 +352,7 @@ Polymer('matrix-string-utilities', {
         <style></style>
         <input is="core-input" value="{{value}}" placeholder="{{placeholder}}"> </template>
     <script>Polymer('matrix-input', {
-  ready: function() {
-    return console.log(this.value);
-  }
+  ready: function() {}
 });
 </script>
 </polymer-element><polymer-element name="matrix-list-item" constructor="MatrixItem" attributes="data" assetpath="matrix-list-item/">
@@ -971,13 +969,13 @@ paper-shadow {
     results = [];
     for (index in ref) {
       item = ref[index];
-      results.push(item.style.zIndex = index);
+      scope.removeChild(item);
+      results.push(this.parentNode.insertBefore(item, this));
     }
     return results;
   }
 });
 </script>
-    <template></template>
 </polymer-element>
 <polymer-element name="core-iconset" extends="core-meta" attributes="src width icons iconSize" assetpath="../../vendor/bower_components/core-iconset/">
   

@@ -61,7 +61,8 @@ Polymer('matrix-sheet-controller', {
     results = [];
     for (index in ref) {
       item = ref[index];
-      results.push(item.style.zIndex = index);
+      scope.removeChild(item);
+      results.push(this.parentNode.insertBefore(item, this));
     }
     return results;
   }
