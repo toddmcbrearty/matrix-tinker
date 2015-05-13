@@ -113,17 +113,17 @@ gulp.task 'dist-copy-main', ->
 
 gulp.task 'dist-copy-style', ->
   gulp.src path.resolve("#{config.build}/style/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/style")
+  .pipe gulp.dest path.resolve("#{config.dist}/#{config.styles}")
 
 gulp.task 'dist-copy-scripts', ->
   gulp.src path.resolve("#{config.build}/scripts/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/scripts")
+  .pipe gulp.dest path.resolve("#{config.dist}/#{config.scripts}")
 
 gulp.task 'dist-dependencies', ->
   gulp.src path.resolve("#{config.build}/elements/webcomponentsjs/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/elements/webcomponentsjs")
+  .pipe gulp.dest path.resolve("#{config.dist}/#{config.elements}/webcomponentsjs")
   gulp.src path.resolve("#{config.build}/elements/polymer/**/*")
-  .pipe gulp.dest path.resolve("#{config.dist}/elements/polymer")
+  .pipe gulp.dest path.resolve("#{config.dist}/#{config.elements}/polymer")
 
 gulp.task 'dist-vulcanize', ->
   gulp.src path.resolve("#{config.build}/elements/matrix-dependencies.html")
@@ -133,7 +133,7 @@ gulp.task 'dist-vulcanize', ->
       imports: ['polymer.html$']
     inline: true
     csp: false
-  .pipe gulp.dest path.resolve("#{config.dist}/elements")
+  .pipe gulp.dest path.resolve("#{config.dist}/#{config.elements}")
 
 gulp.task 'dist-all', -> runSequence 'dist-clean',
   'dist-copy-main',

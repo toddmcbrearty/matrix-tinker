@@ -22,9 +22,9 @@ module.exports = (opts) ->
 
     opts ?= {}
     opts.pattern = new RegExp("(@@bower)/([^/\r\n]+)/") unless opts.pattern instanceof RegExp
-    opts.from ?= 'vendor/bower_components'
-    opts.to ?= 'build/elements'
-    opts.rel ?= 'src/elements'
+    opts.from ?= "vendor/bower_components"
+    opts.to ?= "build/#{config.elements}"
+    opts.rel ?= "src/#{config.elements}"
 
 #    libs = (line.match(opts.pattern)[2] for line in file.contents.toString().split('\n') when line.match(opts.pattern))
 #

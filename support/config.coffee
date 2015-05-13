@@ -44,5 +44,8 @@ config =
   node: 'node_modules'
   bower: 'vendor/bower_components'
   injections: injections
+  styles: 'css'
+  scripts: 'js'
+  elements: 'elements'
 
 module.exports = config

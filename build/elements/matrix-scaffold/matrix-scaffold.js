@@ -1,1 +1,0 @@
-Polymer('matrix-scaffold', function() {});
